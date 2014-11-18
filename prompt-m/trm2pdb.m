@@ -22,6 +22,11 @@ for i = 1:nModels
         PDBStruct.Model(i).Atom(j).Y = coordscell{i}(j,2);
         PDBStruct.Model(i).Atom(j).Z = coordscell{i}(j,3);
     end
+end
+
+% add the model numbers; we do it in a separate loop to be able to assign
+% model structures from initialPDBStruct to PDBStruct in the loop above
+for i = 1:nModels
     PDBStruct.Model(i).MDLSerNo = i;
 end
 
