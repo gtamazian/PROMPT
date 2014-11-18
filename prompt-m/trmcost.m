@@ -1,4 +1,4 @@
-function cost = trmcost(trmodel, p)
+function [cost, X] = trmcost(trmodel, p)
 %TRMCOST Calculates cost of the transformation.
 %   trmcost(trmodel) returns the cost of the transformation represented by
 %   the specified model. The cost is calculated as a function of the
@@ -26,7 +26,8 @@ for i = 2:nModels
    distances(:,i) = sqrt(sum((coordscell{i} - coordscell{i-1}).^2, 2));
 end
 
-cost = sum(trmodel.m .* sum(distances, 2).^p);  
+cost = sum(trmodel.m .* sum(distances.^p, 2));
+X = coordscell;
 
 end
 

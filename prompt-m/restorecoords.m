@@ -11,7 +11,7 @@ function coords = restorecoords(r, alpha, psi)
 %   Parsons, J., Holmes, J. B., Rojas, J. M., Tsai, J., & Strauss, 
 %   C. E. M. (2005). Practical conversion from torsion space to Cartesian 
 %   space for in silico protein synthesis. Journal of computational
-%   chemistry, 26(10), 1063–8. doi:10.1002/jcc.20237
+%   chemistry, 26(10), 1063 8. doi:10.1002/jcc.20237
 %
 % PROMPT Toolbox for MATLAB
 

@@ -82,18 +82,23 @@ torsmodel.alpha(:,2:end-1) = ...
     interpolate(torsmodel.alpha(:,1), torsmodel.alpha(:,end), M);
 
 % Calculate intermediate torsion angles.
-torsmodel.psi(:,2:end-1) = ...
-    circinterp(torsmodel.psi(:,1), torsmodel.psi(:,end), M);
+torsmodel.psi = ...
+    circinterp(torsmodel.psi(:,1), torsmodel.psi(:,end), M+2);
 
 % Calculate the rotation matrix for superposition of the second
 % conformation to the first one.
+torsmodel.U = cell(M+2, 1);
+torsmodel.U{1} = eye(3);
 prevcoords = restorecoords(torsmodel.r(:,1), torsmodel.alpha(:,1), ...
     torsmodel.psi(:,1));
-currcoords = restorecoords(torsmodel.r(:,end), torsmodel.alpha(:,end), ...
-    torsmodel.psi(:,end));
-[~,~,transformation] = procrustes(prevcoords, currcoords, ....
-    'scaling', false, 'reflection', false);
-torsmodel.U = transformation.T;
+for j = 2:M+2
+    currcoords = restorecoords(torsmodel.r(:,j), ...
+        torsmodel.alpha(:,j), torsmodel.psi(:,j));
+    [~,~,transformation] = procrustes(prevcoords, currcoords, ....
+        'scaling', false, 'reflection', false);
+    torsmodel.U{j} = transformation.T;
+    prevcoords = currcoords;
+end
 
 end
 
