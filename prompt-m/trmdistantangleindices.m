@@ -9,7 +9,8 @@ function I = trmdistantangleindices(trmodel, N)
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-[~,I] = sort(abs(circdist(trmodel.psi(:,1), trmodel.psi(:,end))));
+[~,I] = sort(abs(circdist(trmodel.psi(:,1), trmodel.psi(:,end))), ...
+    'descend');
 I = I(1:N);
 
 end

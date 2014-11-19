@@ -21,7 +21,7 @@ I = I(1:N);
 for i = 1:2^N
     newmodel = trmodel;
     newmodel.psi(I,:) = circinterp(newmodel.psi(I,1), ...
-        newmodel.psi(I,end), m, transpose(interpmask(i,:)));
+        newmodel.psi(I,end), m-2, transpose(interpmask(i,:)));
     newmodel.psi = reduceangles(newmodel.psi);
     T{i} = newmodel;
 end

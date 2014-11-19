@@ -17,10 +17,10 @@ if nargin < 4
     shortArc = true(n, 1);
 end
 
-Mu = repmat(1 - shortArc, 1, M);
-I = repmat(0:(M-1), n, 1)/(M-1);
-Delta = repmat(circdist(X, Y), 1, M);
-X = repmat(X, 1, M);
+Mu = repmat(1 - shortArc, 1, M+2);
+I = repmat(0:(M+1), n, 1)/(M+1);
+Delta = repmat(circdist(X, Y), 1, M+2);
+X = repmat(X, 1, M+2);
 
 Z = X + (-2*pi*(sign(Delta).*Mu) + Delta).*I;
 
