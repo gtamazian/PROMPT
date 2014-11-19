@@ -10,7 +10,7 @@ function T = trmvariateinterpolations(trmodel,N)
 % gaik (dot) tamazian (at) gmail (dot) com
 
 T = cell(N,1);
-interpmask = getbinarycode([],N);
+interpmask = 1 - getbinarycode([],N);
 m = size(trmodel.r, 2); % the number of configurations
 
 % get indices of N torsion angles which differ at most in the first and
