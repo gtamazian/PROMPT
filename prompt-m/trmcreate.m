@@ -68,15 +68,13 @@ torsmodel.psi = ...
 % conformation to the first one.
 torsmodel.U = cell(M+2, 1);
 torsmodel.U{1} = eye(3);
-prevcoords = restorecoords(torsmodel.r(:,1), torsmodel.alpha(:,1), ...
-    torsmodel.psi(:,1));
+prevcoords = torsmodel.StartCoords;
 for j = 2:M+2
     currcoords = restorecoords(torsmodel.r(:,j), ...
         torsmodel.alpha(:,j), torsmodel.psi(:,j));
-    [~,~,transformation] = procrustes(prevcoords, currcoords, ....
+    [~,prevcoords,transformation] = procrustes(prevcoords, currcoords, ...
         'scaling', false, 'reflection', false);
     torsmodel.U{j} = transformation.T;
-    prevcoords = currcoords;
 end
 
 end

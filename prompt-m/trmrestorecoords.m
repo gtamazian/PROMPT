@@ -12,13 +12,15 @@ function coordscell = trmrestorecoords(trmodel)
 m = size(trmodel.psi, 2);
 n = size(trmodel.r, 1) + 1;
 coordscell = cell(1, m);
+coordscell{1} = trmodel.StartCoords;
+first_t = repmat(mean(coordscell{1}, 1), n, 1);
 
-for i = 1:m
+for i = 2:m
     coordscell{i} = restorecoords(trmodel.r(:,i), ...
         trmodel.alpha(:,i), trmodel.psi(:,i));
     coordscell{i} = coordscell{i}*trmodel.U{i};
     
     % apply the translation
     t = repmat(mean(coordscell{i}, 1), n, 1);
-    coordscell{i} = coordscell{i} - t;       
+    coordscell{i} = coordscell{i} - t + first_t;       
 end
