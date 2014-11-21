@@ -6,10 +6,6 @@ function cost = pdbtransformationcost(PDBStruct, p)
 %   weighted sum of distances between atoms of the adjacent models. The
 %   parameter p is the power interatomic distances are raised to.
 %
-%   There are two cost types. In the type A cost, the sum of interatomic
-%   distances is raised to the power p. In the type B cost, interatomic
-%   distances are raised to the power p and then summed.
-%
 %   The default value for the power p is 2.
 %
 % PROMPT Toolbox for MATLAB
@@ -65,7 +61,7 @@ for i = 2:nModels
     coordsprev = coordscur;
 end
     
-cost = sum(m .* sum(distances, 2).^p);
+cost = sum(m .* sum(distances.^p, 2));
 
 end
 
