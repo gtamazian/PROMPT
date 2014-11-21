@@ -20,8 +20,8 @@ end
 nModels = length(PDBStruct.Model);
 
 % check that the specified structure contains only backbone atoms
-for i = 1:nModels
-    if ~isempty(setdiff(unique({PDBStruct.Model(i).Atom.AtomName}), ...
+for j = 1:nModels
+    if ~isempty(setdiff(unique({PDBStruct.Model(j).Atom.AtomName}), ...
             {'N', 'CA', 'C'}))
         error(['the specified PDBStruct object contains models ', ...
             'with non-backbone atoms']);
@@ -50,15 +50,11 @@ m(1) = m(1) + atomicmass({'H'});
 m(end) = m(end) + sum(atomicmass({'O', 'H'}));
 
 % calculate distances between atoms of adjacent models
-coordsprev = [[PDBStruct.Model(1).Atom.X]' ...
-        [PDBStruct.Model(1).Atom.Y]' [PDBStruct.Model(1).Atom.Z]'];
-nAtoms = size(coordsprev, 1);
+coords = pdbextractcoords(PDBStruct);
+nAtoms = size(coords{1}, 1);
 distances = zeros(nAtoms, nModels);    
-for i = 2:nModels
-    coordscur = [[PDBStruct.Model(i).Atom.X]' ...
-        [PDBStruct.Model(i).Atom.Y]' [PDBStruct.Model(i).Atom.Z]'];
-    distances(:,i) = sqrt(sum((coordscur - coordsprev).^2, 2));
-    coordsprev = coordscur;
+for j = 2:nModels
+    distances(:,j) = sqrt(sum((coords{j} - coords{j-1}).^2, 2));
 end
     
 cost = sum(m .* sum(distances.^p, 2));
