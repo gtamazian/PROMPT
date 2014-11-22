@@ -2,7 +2,7 @@ function mindist = pdbmininteratomicdist(PDBStruct)
 %PDBMININTERATOMICDIST Returns the minimal interatomic distances.
 %   pdbmininteratomicdist(PDBStruct) returns the vector of the minimal
 %	interatomic distances between the atoms that belong to the same
-%	transformation confguration. Each element of the vector corresponds
+%	transformation configuration. Each element of the vector corresponds
 %	to the certain configuration.
 %
 % PROMPT Toolbox for MATLAB
