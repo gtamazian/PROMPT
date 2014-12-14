@@ -1,9 +1,11 @@
-function mindist = pdbmininteratomicdist(PDBStruct)
-%PDBMININTERATOMICDIST Returns the minimal interatomic distances.
-%   pdbmininteratomicdist(PDBStruct) returns the vector of the minimal
-%	interatomic distances between the atoms that belong to the same
-%	transformation configuration. Each element of the vector corresponds
-%	to the certain configuration.
+function minDist = pdbmininteratomicdist(PDBStruct)
+%PDBMININTERATOMICDIST Returns minimal interatomic distances
+%   PDBMININTERATOMICDIST(PDBStruct) returns the vector of the minimal
+%   interatomic distances between atoms within transformation 
+%   configurations. The transformation is specified by the PDB structure
+%   PDB struct. Each vector element corresponds to the certain PDB model.
+%
+%   See also trmmininteratomicdist
 %
 % PROMPT Toolbox for MATLAB
 
@@ -11,10 +13,11 @@ function mindist = pdbmininteratomicdist(PDBStruct)
 % gaik (dot) tamazian (at) gmail (dot) com
 
 coords = pdbextractcoords(PDBStruct);
-mindist = length(coords);
+nModels = length(coords);
+minDist = nan(nModels, 1);
 
-for i = 1:length(coords)
-	mindist(i) = min(pdist(coords{i}));
+for iModel = 1:nModels
+	minDist(iModel) = min(pdist(coords{iModel}));
 end
 
 end

@@ -1,8 +1,10 @@
-function h = trmplotfixedrmsd(trmodels,confNum)
-%TRMPLOTFIXEDRMSD Plot RMSDs between configurations and the specified one.
-%   trmplotfixedrmsd(trmodels,confNum) plots RMSDs between all 
+function h = trmplotfixedrmsd(trmodels,confNo)
+%TRMPLOTFIXEDRMSD Plot RMSDs between configurations and the specified one
+%   TRMPLOTFIXEDRMSD(trmodels, confNo) plots RMSDs between all 
 %   configurations of transformations specified in the cell array trmodels 
-%   and the configuration with the specified number confNum.
+%   and the configuration with the specified number confNo.
+%
+%   See also trmplotadjrmsd trmplottranglediff
 %
 % PROMPT Toolbox for MATLAB
 
@@ -23,7 +25,7 @@ for i = 1:nTrans
     coords = trmrestorecoords(trmodels{i});
     for j = 1:nConf
         rmsdValues(i,j) = mean(sqrt(sum((coords{j} - ...
-            coords{confNum}).^2,2)));
+            coords{confNo}).^2,2)));
     end
 end
 

@@ -1,26 +1,31 @@
-function coordscell = trmrestorecoords(trmodel)
-%TRMRESTORECOORDS Restores Cartesian coordinates of transformation atoms.
-%   trmrestorecoords(trmodel) returns a cell array of matrices containing
-%   Cartesian coordinates of the atoms that constitute the transformation
-%   configurations.
+function coords = trmrestorecoords(trmodel)
+%TRMRESTORECOORDS Restores Cartesian coordinates of transformation atoms
+%   TRMRESTORECOORDS(trmodel) returns a cell array of matrices containing
+%   Cartesian coordinates of the atoms that constitute configurations of
+%   the transformation trmodel.
+%
+%   See also restorecoords
 %
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-m = size(trmodel.psi, 2);
-n = size(trmodel.r, 1) + 1;
-coordscell = cell(1, m);
-coordscell{1} = trmodel.StartCoords;
-first_t = repmat(mean(coordscell{1}, 1), n, 1);
+nConf = size(trmodel.psi, 2);
+nAtoms = size(trmodel.r, 1) + 1;
+coords = cell(1, nConf);
+coords{1} = trmodel.StartCoords;
+firstConfTranslation = repmat(mean(coords{1}, 1), nAtoms, 1);
 
-for i = 2:m
-    coordscell{i} = restorecoords(trmodel.r(:,i), ...
+for i = 2:nConf
+    coords{i} = restorecoords(trmodel.r(:,i), ...
         trmodel.alpha(:,i), trmodel.psi(:,i));
-    coordscell{i} = coordscell{i}*trmodel.U{i};
+    coords{i} = coords{i}*trmodel.U{i};
     
     % apply the translation
-    t = repmat(mean(coordscell{i}, 1), n, 1);
-    coordscell{i} = coordscell{i} - t + first_t;       
+    currTranslation = repmat(mean(coords{i}, 1), nAtoms, 1);
+    coords{i} = coords{i} - currTranslation + firstConfTranslation;       
 end
+
+end
+

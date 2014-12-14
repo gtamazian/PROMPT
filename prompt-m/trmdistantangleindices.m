@@ -1,17 +1,19 @@
-function I = trmdistantangleindices(trmodel, N)
-%TRMDISTANTANGLEINDICES Get indices of N most distant torsion angles.
-%   trmdistantangleindices(trmodel, N) returns indices of N torsion
-%   angles phi and psi which values in the original conformations differ at
-%   most.
+function angleIndices = trmdistantangleindices(trmodel, nAngles)
+%TRMDISTANTANGLEINDICES Get indices of most distant torsion angles
+%   TRMDISTANTANGLEINDICES(trmodel, nAngles) returns indices of nAngles
+%   torsion angles which values in the first and last model configurations
+%   differ at most.
+%
+%   See also trmcostangles
 %
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-[~,I] = sort(abs(circdist(trmodel.psi(:,1), trmodel.psi(:,end))), ...
-    'descend');
-I = I(1:N);
+[~,angleIndices] = sort(abs(circdist(trmodel.psi(:,1), ...
+    trmodel.psi(:,end))), 'descend');
+angleIndices = angleIndices(1:nAngles);
 
 end
 

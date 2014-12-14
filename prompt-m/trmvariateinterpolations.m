@@ -1,29 +1,32 @@
-function T = trmvariateinterpolations(trmodel,N)
-%TRMVARIATEINTERPOLATIONS Variate interpolation modes for torsion angles.
-%   trmvariateinterpolations(trmodel,N) returns a cell array of 2^N
-%   transformations which differ in the direction the most differing angles
-%   in the specified transformation were interpolated.
+function transformations = trmvariateinterpolations(trmodel, nAngles)
+%TRMVARIATEINTERPOLATIONS Vary interpolation modes for torsion angles
+%   TRMVARIATEINTERPOLATIONS(trmodel, nAmgles) returns a cell array of 
+%   2^nAngles transformations which differ in the direction the most 
+%   differing angles in the specified transformation trmodel were 
+%   interpolated.
+%
+%   See also trmcreate
 %
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-T = cell(N,1);
-interpmask = 1 - getbinarycode([],N);
-m = size(trmodel.r, 2); % the number of configurations
+transformations = cell(nAngles,1);
+interpmask = 1 - getbinarycode([],nAngles);
+nConf = size(trmodel.r, 2);
 
 % get indices of N torsion angles which differ at most in the first and
 % last configurations of the specified transformation
-I = trmdistantangleindices(trmodel,N);
-I = I(1:N);
+I = trmdistantangleindices(trmodel,nAngles);
+I = I(1:nAngles);
 
-for i = 1:2^N
-    newmodel = trmodel;
-    newmodel.psi(I,:) = circinterp(newmodel.psi(I,1), ...
-        newmodel.psi(I,end), m-2, transpose(interpmask(i,:)));
-    newmodel.psi = reduceangles(newmodel.psi);
-    T{i} = newmodel;
+for i = 1:2^nAngles
+    newModel = trmodel;
+    newModel.psi(I,:) = circinterp(newModel.psi(I,1), ...
+        newModel.psi(I,end), nConf-2, transpose(interpmask(i,:)));
+    newModel.psi = reduceangles(newModel.psi);
+    transformations{i} = newModel;
 end
 
 end

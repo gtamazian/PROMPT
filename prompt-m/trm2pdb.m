@@ -1,9 +1,11 @@
 function PDBStruct = trm2pdb(trmodel, initialPDBStruct)
-%TRM2PDB Converts a transformation model to a PDB struct. 
-%   trm2pdb(trmodel, initialPDBStruct) returns the PDB structure that
-%   correposonds to the transformation presented in the transformation
-%   model trmodel. The initial PDB structure the transformartion has been 
-%   created from is also required.
+%TRM2PDB Convert a transformation model to a PDB structure object. 
+%   TRM2PDB(trmodel, initialPDBStruct) returns the PDB structure that
+%   corresponds to the transformation presented in the specified 
+%   transformation model trmodel. The initial PDB structure the 
+%   transformartion has been created from is also required.
+%
+%   See also trmcreate
 %
 % PROMPT Toolbox for MATLAB
 

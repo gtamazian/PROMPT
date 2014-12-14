@@ -1,11 +1,16 @@
 function U = quat2rotmat(q)
-%QUAT2ROTMAT Convert a quaternion to the rotation matrix.
-%   quat2rotmat converts the specified quaternion q to the rotation matrix.
+%QUAT2ROTMAT Convert a quaternion to a rotation matrix
+%   QUAT2ROTMAT(q) converts the specified quaternion q to a rotation 
+%   matrix.
 %
-%   References:
-%       1. Coutsias, Evangelos A., Chaok Seok, and Ken A. Dill. 
-%       "Using quaternions to calculate RMSD." Journal of computational 
-%       chemistry 25, no. 15 (2004): 1849-1857.
+%   Example:
+%       
+%       % Get the quaternion describing the rotation to superpose X and Y
+%       % axes to Y and Z axes and convert it to a rotation matrix.
+%       rotQuaternion = optimquat([0 0 1; 0 1 0], [0 1 0; 0 0 1])
+%       rotMatrix = quat2rotmat(rotQuaternion)
+%
+%   See also optimquat
 %
 % PROMPT Toolbox for MATLAB
 

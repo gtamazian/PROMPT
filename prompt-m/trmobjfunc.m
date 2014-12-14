@@ -1,20 +1,23 @@
-function [F, G] = trmobjfunc(trmodel,indices,angles)
-%TRMOBJFUNC Calculate the cost function and its gradient for the model.
-%   trmobjfunc(trmodel,indices,angles) returns the cost of the specified
-%   transformation trmodel for values of torsion angles (angles) which
-%   indices are specified in the corresponding argument (indices).
+function [F, G] = trmobjfunc(trmodel, angleIndices, angles)
+%TRMOBJFUNC Calculate the cost function and its gradient for the model
+%   TRMOBJFUNC(trmodel,indices,angles) returns the cost of the specified
+%   transformation trmodel for the values of torsion angles specified in
+%   the vector angles. The angles are also defined by their indices in the
+%   given vector angleIndices.
+%
+%   See also trmcost trmcostangles
 %
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-trmodel.psi(indices,2:end-1) = ...
-    reshape(angles, length(indices), size(trmodel.psi, 2) - 2);
+trmodel.psi(angleIndices,2:end-1) = ...
+    reshape(angles, length(angleIndices), size(trmodel.psi, 2) - 2);
 
-[F, X] = trmcost(trmodel, 2);
+[F, X] = trmcost(trmodel);
 G = g(trmodel, X);
-G = G(indices, 2:end-1);
+G = G(angleIndices, 2:end-1);
 
 end
 

@@ -1,9 +1,12 @@
-function torsmodel = trmcreate(PDBStruct1, PDBStruct2, M)
+function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf)
 %TRMCREATE Creates a transformation model.
-%   trmcreate(PDBStruct1, PDBStruct2, M) creates a transformation
-%   model from two unimodal PDB structures which contain only backbone
-%   atoms. The parameter M specifies the number of intermediate
-%   configurations in the transformation model.
+%   TRMCREATE(PDBStruct1, PDBStruct2, nModels) creates a transformation
+%   model from two PDB structures which contain a single model and
+%   correspond to the same protein. Note that amino acid content of both 
+%   structures must be the same. The parameter nConf specifies the number 
+%   of intermediate configurations in the transoformation model.
+%
+%   See also createmodel pdb2trm
 %
 % PROMPT Toolbox for MATLAB
 
@@ -20,63 +23,63 @@ PDBStruct1 = pdbbackbone(PDBStruct1);
 PDBStruct2 = pdbbackbone(PDBStruct2);
 
 % Get atomic masses of backbone atoms.
-torsmodel = struct('m', atomicmass({PDBStruct1.Model.Atom.element}), ...
+trmodel = struct('m', atomicmass({PDBStruct1.Model.Atom.element}), ...
     'StartCoords', atomiccoords(PDBStruct1), ...
     'FinishCoords', atomiccoords(PDBStruct2));
 
 % Process side chains atoms - get a vector of their masses and add them to
 % atomic masses of alpha carbons. Also add a mass of one hydrogen atom.
-alphacarbonatoms = PDBStruct1.Model.Atom( ...
+alphaCarbonAtoms = PDBStruct1.Model.Atom( ...
     ismember({PDBStruct1.Model.Atom.AtomName}, {'CA'}));
-torsmodel.m(2:3:end) = torsmodel.m(2:3:end) + ...
-    sidechainmass({alphacarbonatoms.resName}) + atomicmass({'H'});
+trmodel.m(2:3:end) = trmodel.m(2:3:end) + ...
+    sidechainmass({alphaCarbonAtoms.resName}) + atomicmass({'H'});
 
 % Add masses of hydrogen atoms to nitrogen atoms of the backbone.
-torsmodel.m(1:3:end) = torsmodel.m(1:3:end) + atomicmass({'H'});
+trmodel.m(1:3:end) = trmodel.m(1:3:end) + atomicmass({'H'});
 
 % Add masses of oxygen atoms to carbon atoms of the backbone.
-torsmodel.m(3:3:end) = torsmodel.m(3:3:end) + atomicmass({'O'});
+trmodel.m(3:3:end) = trmodel.m(3:3:end) + atomicmass({'O'});
 
 % Add a mass of a hydrogen atom to N-end of the protein.
-torsmodel.m(1) = torsmodel.m(1) + atomicmass({'H'});
+trmodel.m(1) = trmodel.m(1) + atomicmass({'H'});
 
 % Add a mass of a hydroxil group to C-end of the protein.
-torsmodel.m(end) = torsmodel.m(end) + sum(atomicmass({'O', 'H'}));
+trmodel.m(end) = trmodel.m(end) + sum(atomicmass({'O', 'H'}));
 
-torsmodel.r     = zeros(length(torsmodel.m) - 1, M+2);
-torsmodel.alpha = zeros(length(torsmodel.m) - 2, M+2);
-torsmodel.psi   = zeros(length(torsmodel.m) - 3, M+2);
+trmodel.r     = zeros(length(trmodel.m) - 1, nConf+2);
+trmodel.alpha = zeros(length(trmodel.m) - 2, nConf+2);
+trmodel.psi   = zeros(length(trmodel.m) - 3, nConf+2);
 
 % Calculate bond lengths, planar and torsion angles of the first and last
 % configurations.
-[torsmodel.r(:,1), torsmodel.alpha(:,1), torsmodel.psi(:,1)] = ...
+[trmodel.r(:,1), trmodel.alpha(:,1), trmodel.psi(:,1)] = ...
     createmodel(PDBStruct1);
-[torsmodel.r(:,end), torsmodel.alpha(:,end), torsmodel.psi(:,end)] = ...
+[trmodel.r(:,end), trmodel.alpha(:,end), trmodel.psi(:,end)] = ...
     createmodel(PDBStruct2);
 
 % Calculate intermediate bond lengths and planar angles.
-torsmodel.r(:,2:end-1) = ...
-    interpolate(torsmodel.r(:,1), torsmodel.r(:,end), M);
-torsmodel.alpha = ...
-    circinterp(torsmodel.alpha(:,1), torsmodel.alpha(:,end), M);
+trmodel.r(:,2:end-1) = ...
+    interpolate(trmodel.r(:,1), trmodel.r(:,end), nConf);
+trmodel.alpha = ...
+    circinterp(trmodel.alpha(:,1), trmodel.alpha(:,end), nConf);
 
 % Calculate intermediate torsion angles.
-torsmodel.psi = ...
-    circinterp(torsmodel.psi(:,1), torsmodel.psi(:,end), M);
+trmodel.psi = ...
+    circinterp(trmodel.psi(:,1), trmodel.psi(:,end), nConf);
 
 % Calculate the rotation matrix for superposition of the second
 % conformation to the first one.
-torsmodel.U = cell(M+2, 1);
-torsmodel.U{1} = eye(3);
-prevCoords = torsmodel.StartCoords;
-for j = 2:M+2
-    currCoords = restorecoords(torsmodel.r(:,j), ...
-        torsmodel.alpha(:,j), torsmodel.psi(:,j));
+trmodel.U = cell(nConf+2, 1);
+trmodel.U{1} = eye(3);
+prevCoords = trmodel.StartCoords;
+for j = 2:nConf+2
+    currCoords = restorecoords(trmodel.r(:,j), ...
+        trmodel.alpha(:,j), trmodel.psi(:,j));
     q = optimquat(prevCoords,currCoords);
-    torsmodel.U{j} = quat2rotmat(q);
-    r = mean(prevCoords,1) - mean(currCoords*torsmodel.U{j},1);
-    prevCoords = currCoords*torsmodel.U{j} + ...
-        repmat(r,size(currCoords,1),1);
+    trmodel.U{j} = quat2rotmat(q);
+    r = mean(prevCoords,1) - mean(currCoords*trmodel.U{j},1);
+    prevCoords = currCoords*trmodel.U{j} + ...
+        repmat(r, size(currCoords,1),1);
 end
 
 end

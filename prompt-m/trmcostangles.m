@@ -1,28 +1,26 @@
-function cost = trmcostangles(trmodel, indices, angles, p)
+function cost = trmcostangles(trmodel, angleIndices, angles)
 %TRMCOSTANGLES Transformation cost as a function of specified angles.
-%   trmcostangles(trmodel, indices, angles) calculates cost of the trmodel
-%	transformation with the torsion angle values specified by the
-%   angle vector. Indices of the torsion angles are also specified.
-%
-%   Default values for the power p and cost type type are 2 and 'A',
-%   respectively.
+%   TRMCOSTANGLES(trmodel, angleIndices, angles) calculates cost of the
+%   transformation defined by the model trmodel with the torsion angle 
+%   values specified by the vector angle. Indices of the torsion angles 
+%   are also specified in the vector angleIndices.
 %
 %   Example:
+%
+%       % Let t be a transformation model.
 %       I = setdiff(1:size(t.psi, 1), 2:3:size(t.psi, 1));
 %       trmcostangles(t, I, t.psi(I,2:end-1))
+%
+%   See also trmcost trmobjfunc pdbtrfcost
 %
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-if nargin < 4
-    p = 2;
-end
-
-trmodel.psi(indices,2:end-1) = ...
-    reshape(angles, length(indices), size(trmodel.psi, 2) - 2);
-cost = trmcost(trmodel, p);
+trmodel.psi(angleIndices,2:end-1) = ...
+    reshape(angles, length(angleIndices), size(trmodel.psi, 2) - 2);
+cost = trmcost(trmodel);
 
 end
 

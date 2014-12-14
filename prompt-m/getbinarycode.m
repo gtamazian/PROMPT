@@ -1,8 +1,14 @@
-function G = getbinarycode(X,N)
-%GETBINARYCODE Generates binary numbers from 0 to 2^N.
-%   getbinarycode(X,N) returns the matrix which rows are binary numbers
+function G = getbinarycode(X, N)
+%GETBINARYCODE Generate binary numbers from 0 to 2^N
+%   GETBINARYCODE(X, N) returns the matrix which rows are binary numbers
 %   from 0 to 2^N. The function should be launched with [] as the X 
 %   argument.
+%
+%   Examples:
+%
+%       getbinarycode([], 3)
+%
+%   See also dec2bin
 %
 % PROMPT Toolbox for MATLAB
 

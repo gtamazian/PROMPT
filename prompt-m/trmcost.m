@@ -1,33 +1,32 @@
-function [cost, X] = trmcost(trmodel, p)
+function [cost, X] = trmcost(trmodel)
 %TRMCOST Calculates cost of the transformation.
-%   trmcost(trmodel) returns the cost of the transformation represented by
-%   the specified model. The cost is calculated as a function of the
-%   weighted sum of distances between atoms of the adjacent models. The
-%   parameter p is the power interatomic distances are raised to.
+%   [cost, X] = TRMCOST(trmodel) returns the cost of the transformation 
+%   represented by the specified model. The cost is calculated as a 
+%   function of the weighted sum of squared distances between atoms of the 
+%   adjacent model configurations. Also the function returns restored
+%   coordinates of transformation atoms as a cell array of matrices X.
 %
-%   The default value for the power p is 2.
+%   See also trmcostangles trmobjfunc pdbtrfcost
 %
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-if nargin < 2
-    p = 2;
-end
+p = 2;
 
-coordscell = trmrestorecoords(trmodel);
-nModels = length(coordscell);
-nAtoms = size(coordscell{1}, 1);
+coords = trmrestorecoords(trmodel);
+nModels = length(coords);
+nAtoms = size(coords{1}, 1);
 
 % calculate distances
 distances = zeros(nAtoms, nModels);
 for i = 2:nModels
-   distances(:,i) = sqrt(sum((coordscell{i} - coordscell{i-1}).^2, 2));
+   distances(:,i) = sqrt(sum((coords{i} - coords{i-1}).^2, 2));
 end
 
 cost = sum(trmodel.m .* sum(distances.^p, 2));
-X = coordscell;
+X = coords;
 
 end
 

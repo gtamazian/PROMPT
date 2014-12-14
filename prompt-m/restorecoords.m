@@ -1,17 +1,28 @@
 function coords = restorecoords(r, alpha, psi)
-%RESTORECOORDS Restores Cartesian coordinates of the atoms.
+%RESTORECOORDS Restore Cartesian coordinates of atoms
 %   restorecoords(r, alpha, psi) restores Cartesian coordinates of the 
-%   atoms from bond lengths, planar and torsion angles.
+%   atoms from the specified bond length, planar and torsion angle vectors
+%   (r, alpha and psi vectors, respectively).
 %
 %   The first point is zero, the second point lies on OX axis and the third
 %   one lies on XOY coordinate plane. The Natural Extension Reference frame
-%   method is used for placing atoms.
+%   method is used for placing atoms [1].
 %
-% References:
-%   Parsons, J., Holmes, J. B., Rojas, J. M., Tsai, J., & Strauss, 
-%   C. E. M. (2005). Practical conversion from torsion space to Cartesian 
-%   space for in silico protein synthesis. Journal of computational
-%   chemistry, 26(10), 1063 8. doi:10.1002/jcc.20237
+%   Example:
+%
+%       r = [1.5044, 1.5330, 1.3314, 1.4580];
+%       alpha = [1.2062, 1.1223, 1.0117];
+%       psi = [-2.4857, 3.1121];
+%       coords = restorecoords(r, alpha, psi)
+%
+%   References:
+%
+%       [1] Parsons, J., Holmes, J. B., Rojas, J. M., Tsai, J., & Strauss, 
+%       C. E. M. (2005). Practical conversion from torsion space to 
+%       Cartesian space for in silico protein synthesis. Journal of %
+%       computational chemistry, 26(10), 1063 8. doi:10.1002/jcc.20237
+%
+%   See also createmodel trmrestorecoords
 %
 % PROMPT Toolbox for MATLAB
 
@@ -37,3 +48,4 @@ for i = 4:nAtoms
 end
 
 end
+

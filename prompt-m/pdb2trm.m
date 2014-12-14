@@ -1,7 +1,14 @@
 function trmodel = pdb2trm(PDBStruct)
-%PDB2TRM Create a transformation model from a PDB structure object.
-%   pdb2trm(PDBStruct) creates a transformation model which represents a
+%PDB2TRM Create a transformation model from a PDB structure
+%   PDB2TRM(PDBStruct) creates a transformation model which represents a
 %   transformation from the specified PDB structure.
+%
+%   See also createmodel trmcreate
+%
+% PROMPT Toolbox for MATLAB
+
+% By Gaik Tamazian, 2014.
+% gaik (dot) tamazian (at) gmail (dot) com
 
 coords = pdbextractcoords(PDBStruct);
 nModels = size(coords,2);

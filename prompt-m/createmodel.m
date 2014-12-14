@@ -1,11 +1,13 @@
 function [r, alpha, psi] = createmodel(PDBStruct)
-%CREATEMODEL Calculate bond lengths, planar and torsion angles.
-%   [r, alpha, psi] = createmodel(PDBStruct) calculates bond lengths,
+%CREATEMODEL Get transformation bond lengths, planar and torsion angles
+%   [r, alpha, psi] = CREATEMODEL(PDBStruct) calculates bond lengths,
 %   planar and torsion angles of the transformation specified by the
-%   structure PDBStruct. The bond lengths are returned in the matrix r, the
-%   planar angles - in the matrix alpha, and the torsion angles - in the
+%   structure PDBStruct. The bond lengths are returned in the matrix r, 
+%   the planar angles in the matrix alpha and the torsion angles in the
 %   matrix psi. Each column of the matrices r, alpha, and psi corresponds 
 %   to the separate configuration of the transformation.
+%
+%   See also restorecoords trmcreate
 %
 % PROMPT Toolbox for MATLAB
 

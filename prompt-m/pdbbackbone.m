@@ -1,7 +1,9 @@
 function backbonePDBStruct = pdbbackbone(PDBStruct)
-%PDBBACKBONE Extracts a PDB structure with backbone atoms.
-%   pdbbackbone(PDBStruct) returns a PDB structure that contains only
+%PDBBACKBONE Return a PDB structure only with backbone atoms
+%   PDBBACKBONE(PDBStruct) returns a PDB structure that contains only
 %   backbone atoms (that is, atoms, which names are N, C, and CA).
+%
+%   See also pdbextractcoords
 %
 % PROMPT Toolbox for MATLAB
 

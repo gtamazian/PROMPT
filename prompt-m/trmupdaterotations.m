@@ -1,8 +1,10 @@
 function result = trmupdaterotations(trmodel)
-%TRMUPDATEROTATIONS Update rotation matrices using the Kabsch algorithm.
-%   trmupdaterotations(trmodel) updates rotation matrices assigned to each
-%   configuration of the specified transformation using the Kabsch
+%TRMUPDATEROTATIONS Update rotation matrices using the Kabsch algorithm
+%   TRMUPDATEROTATIONS(trmodel) updates rotation matrices assigned to each
+%   configuration of the specified transformation trmodel using the Kabsch
 %   algorithm.
+%
+%   See also optimquat quat2rotmat
 %
 % PROMPT Toolbox for MATLAB
 

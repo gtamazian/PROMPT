@@ -1,8 +1,14 @@
 function C = cross3d(A, B)
 %CROSS3D Simplified evalulation of a vector cross product for 3D vectors.
-%   C = cross3d(A,B) returns the vector cross product of three-dimensional
+%   CROSS3D(A, B) returns the vector cross product of three-dimensional
 %   vectors A and B. This implementation is faster than the standard cross
 %   routine.
+%
+%   Examples:
+%
+%       cross3d([1 0 0], [0 1 0])
+%
+%   See also cross
 %
 % PROMPT Toolbox for MATLAB
 

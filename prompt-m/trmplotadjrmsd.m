@@ -1,7 +1,9 @@
 function h = trmplotadjrmsd(trmodels)
-%TRMPLOTADJRMSD Plot RMSDs between adjacent configurations.
-%   trmplotadjrmsd(trmodels) plots RMSDs between adjacent configurations of
-%   the specified transformation models.
+%TRMPLOTADJRMSD Plot RMSDs between adjacent configurations
+%   TRMPLOTADJRMSD(trmodels) plots RMSDs between adjacent configurations of
+%   transformation models specified in a cell array trmodels.
+%
+%   See also trmplotfixedrmsd trmplottranglediff
 %
 % PROMPT Toolbox for MATLAB
 
