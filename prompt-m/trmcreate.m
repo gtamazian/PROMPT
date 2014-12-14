@@ -74,7 +74,9 @@ for j = 2:M+2
         torsmodel.alpha(:,j), torsmodel.psi(:,j));
     q = optimquat(prevCoords,currCoords);
     torsmodel.U{j} = quat2rotmat(q);
-    prevCoords = currCoords;
+    r = mean(prevCoords,1) - mean(currCoords*torsmodel.U{j},1);
+    prevCoords = currCoords*torsmodel.U{j} + ...
+        repmat(r,size(currCoords,1),1);
 end
 
 end
