@@ -1,6 +1,7 @@
 %% Calmodulin conformational motion simulation
 % We demonstrate routines of the PROMPT package by simulating
-% conformational motion between two conformations of calmodulin.
+% conformational motion between two conformations of calmodulin. To launch
+% the example, use the following command: *calmodulin_demo*.
 
 %% Preparing data
 % Prior to creating a transformation model, we should process data from PDB
@@ -9,7 +10,8 @@
 % (<http://www.mathworks.com/products/bioinfo/>). The function returns a
 % *PDBStruct* object.
 
-pdbStructure = pdbread('samples/calmodulin.pdb');
+toolboxPath = fileparts(which('calmodulin_demo'));
+pdbStructure = pdbread(fullfile(toolboxPath, 'samples/calmodulin.pdb'));
 
 %%
 % We need a pair of protein states to build a transformation model. Further

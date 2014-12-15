@@ -4,13 +4,16 @@
    <type>toolbox</type>
    <icon>HelpIcon.DEMOS</icon>
    <description>The toolbox contains a set of functions to create and process coarse-grained models of protein conformational motion.</description>
+   <website><a href="https://github.com/DobzhanskyCenter/PROMPT">Toolbox GitHub repository</a></website>
+   
    <demosection>
-      <label>PROMPT-M</label>
+      <label>Motion simulation</label>
       <demoitem>
-         <label>calmodulin_demo</label>
-         <type>other</type>
+         <label>Calmodulin</label>
+         <type>M-type</type>
          <source>calmodulin_demo</source>
          <file>html/calmodulin_demo.html</file>
       </demoitem>
    </demosection>
+   
 </demos>

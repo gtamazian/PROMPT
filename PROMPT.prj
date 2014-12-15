@@ -1,8 +1,8 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="1689740657" file="/Users/gtamazian/Programs/PROMPT-M/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT-M" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3015708653" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>PROMPT</param.appname>
     <param.authnamewatermark>Gaik Tamazian</param.authnamewatermark>
-    <param.email>gaik.tamazian@gmail.com</param.email>
+    <param.email>gaik (dot) tamazian (at) gmail (dot) com</param.email>
     <param.company>St. Petersburg State University</param.company>
     <param.summary>PRotein cOnformational Motion Prediction toolbox.</param.summary>
     <param.description>The toolbox contains a set of functions to create and process coarse-grained models of protein conformational motion.</param.description>
@@ -28,7 +28,7 @@
       <item>9.1</item>
     </param.products.version>
     <param.platforms />
-    <param.guid>b0c5503a-ed60-44ad-a589-6b43101e02e6</param.guid>
+    <param.guid>63747a09-2827-422d-92df-59573ef184ff</param.guid>
     <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
 % from packaging.  Excludes should be listed relative to the toolbox folder.
 % Some examples of how to specify excludes are provided below:
@@ -48,12 +48,12 @@
 % All files matching a pattern in all subfolders of the toolbox folder:
 % **/*.bak
 %
-**/.git
+**/*.git
 .gitignore
 **/.DS_Store</param.exclude.filters>
     <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;examples&gt;
-   &lt;exampleCategory name="PROMPT-M"&gt;
+   &lt;exampleCategory name="PROMPT"&gt;
       &lt;example name="calmodulin_demo" type="html"&gt;
          &lt;file type="source"&gt;/html/calmodulin_demo.html&lt;/file&gt;
          &lt;file type="main"&gt;/calmodulin_demo.m&lt;/file&gt;
@@ -77,9 +77,10 @@
       <param.docs />
     </unset>
     <fileset.rootdir>
-      <file>/Users/gtamazian/Programs/PROMPT-M</file>
+      <file>/Users/gtamazian/Programs/PROMPT</file>
     </fileset.rootdir>
     <fileset.rootfiles>
+      <file>${PROJECT_ROOT}/Contents.m</file>
       <file>${PROJECT_ROOT}/LICENSE</file>
       <file>${PROJECT_ROOT}/PROMPT logo.png</file>
       <file>${PROJECT_ROOT}/PROMPT.prj</file>
@@ -94,7 +95,7 @@
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="/Users/gtamazian/Programs/PROMPT-M" name="PROMPT.mltbx" optional="false">/Users/gtamazian/Programs/PROMPT-M/PROMPT.mltbx</file>
+      <file location="/Users/gtamazian/Programs/PROMPT" name="PROMPT.mltbx" optional="false">/Users/gtamazian/Programs/PROMPT/PROMPT.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
