@@ -1,7 +1,7 @@
-% PROMPT Toolbox for MATLAB
+% PROMPT Toolbox
 %
-% PROMPT (PRotein cOnformation Motion PredicTion) toolbox contains a set of
-% functions to create and process coarse-grained models of protein
+% PROMPT (PRotein cOnformation Motion PredicTion) toolbox contains a set 
+% of functions to create and process coarse-grained models of protein 
 % conformational motion. The method implemented in the toolbox is described
 % in the following paper.
 %

@@ -1,4 +1,4 @@
-PROMPT-M
-========
+PROMPT
+======
 
 MATLAB toolbox for protein conformational motion simulation.
