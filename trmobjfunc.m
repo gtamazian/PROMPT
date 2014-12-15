@@ -16,8 +16,11 @@ trmodel.psi(angleIndices,2:end-1) = ...
     reshape(angles, length(angleIndices), size(trmodel.psi, 2) - 2);
 
 [F, X] = trmcost(trmodel);
-G = g(trmodel, X);
-G = G(angleIndices, 2:end-1);
+
+if nargout > 1
+    G = g(trmodel, X);
+    G = G(angleIndices, 2:end-1);
+end
 
 end
 
