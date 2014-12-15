@@ -1,5 +1,5 @@
 function [cost, X] = trmcost(trmodel)
-%TRMCOST Calculates cost of the transformation.
+%TRMCOST Calculate transformation cost
 %   [cost, X] = TRMCOST(trmodel) returns the cost of the transformation 
 %   represented by the specified model. The cost is calculated as a 
 %   function of the weighted sum of squared distances between atoms of the 

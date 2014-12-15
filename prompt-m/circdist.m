@@ -1,5 +1,5 @@
 function D = circdist(X, Y)
-%CIRCDIST Calculate circular distance angles
+%CIRCDIST Calculate circular distance between angles
 %   CIRCDIST(X, Y) returns element-wise circular distances between angles 
 %   specified in the matrices X and Y.
 %

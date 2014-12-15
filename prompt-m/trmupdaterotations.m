@@ -1,5 +1,5 @@
 function result = trmupdaterotations(trmodel)
-%TRMUPDATEROTATIONS Update rotation matrices using the Kabsch algorithm
+%TRMUPDATEROTATIONS Update rotation matrices by the optimal superposition
 %   TRMUPDATEROTATIONS(trmodel) updates rotation matrices assigned to each
 %   configuration of the specified transformation trmodel using the Kabsch
 %   algorithm.

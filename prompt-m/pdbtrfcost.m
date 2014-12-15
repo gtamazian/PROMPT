@@ -1,5 +1,5 @@
 function cost = pdbtrfcost(PDBStruct)
-%PDBTRFCOST Calculates transformation cost from a PDB structure
+%PDBTRFCOST Calculate transformation cost from a PDB structure
 %   PDBTRFCOST(PDBStruct) calculates the cost of the transformation 
 %   represented by a series of models in the specified PDB structure 
 %   PDBStruct. The cost is calculated as a function of the weighted sum of 

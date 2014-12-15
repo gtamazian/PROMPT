@@ -1,5 +1,5 @@
 function reducedAngles = reduceangles(angles)
-%REDUCEANGLES Reduce angular values to the interval [-pi, pi].
+%REDUCEANGLES Reduce angular values to the interval [-pi, pi]
 %   REDUCEANGLES(angles) modifies angular values from the specified matrix
 %   angles so that they would lie between -pi and pi.
 %

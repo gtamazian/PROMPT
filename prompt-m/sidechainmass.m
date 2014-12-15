@@ -1,5 +1,5 @@
 function result = sidechainmass(sideChains)
-%SIDECHAINMASS Return atomic masses of protein side chains
+%SIDECHAINMASS Get atomic masses of protein side chains
 %   SIDECHAINMASS(sideChains) returns a vector of total atomic masses for
 %   side chains which names are specified by the cell array sideChains.
 %

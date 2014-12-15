@@ -1,5 +1,5 @@
 function q = optimquat(X, Y)
-%OPTIMQUAT Quaternion corresponding to an optimal rotation to fit Y to X
+%OPTIMQUAT Get quaternion representing the optimal rotation to fit Y to X
 %   OPTIMQUAT(X, Y) returns a 4-element vector representing the quaternion
 %   which describes the optimal rotation to fit the points in the matrix
 %   Y to the points in the matrix X. The implemented algorithm is 

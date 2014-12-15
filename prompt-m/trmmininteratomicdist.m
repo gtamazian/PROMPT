@@ -1,5 +1,5 @@
 function minDist = trmmininteratomicdist(trmodel)
-%TRMMININTERATOMICDIST Returns the minimal interatomic distances
+%TRMMININTERATOMICDIST Get minimal interatomic distances
 %   TRMMININTERATOMICDIST(trmodel) returns the vector of minimal
 %   interatomic distances between the atoms within configurations of the
 %   specified transformation model. Each vector element corresponds to

@@ -1,5 +1,5 @@
 function PDBStruct = trm2pdb(trmodel, initialPDBStruct)
-%TRM2PDB Convert a transformation model to a PDB structure object. 
+%TRM2PDB Convert a transformation model to a PDB structure object
 %   TRM2PDB(trmodel, initialPDBStruct) returns the PDB structure that
 %   corresponds to the transformation presented in the specified 
 %   transformation model trmodel. The initial PDB structure the 

@@ -1,5 +1,5 @@
 function C = cross3d(A, B)
-%CROSS3D Simplified evalulation of a vector cross product for 3D vectors.
+%CROSS3D Simplified evalulation of a vector cross product for 3D vectors
 %   CROSS3D(A, B) returns the vector cross product of three-dimensional
 %   vectors A and B. This implementation is faster than the standard cross
 %   routine.

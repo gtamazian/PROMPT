@@ -1,5 +1,5 @@
 function angleIndices = trmdistantangleindices(trmodel, nAngles)
-%TRMDISTANTANGLEINDICES Get indices of most distant torsion angles
+%TRMDISTANTANGLEINDICES Get indices of the most distant torsion angles
 %   TRMDISTANTANGLEINDICES(trmodel, nAngles) returns indices of nAngles
 %   torsion angles which values in the first and last model configurations
 %   differ at most.

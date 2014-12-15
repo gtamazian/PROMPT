@@ -1,5 +1,5 @@
 function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf)
-%TRMCREATE Creates a transformation model.
+%TRMCREATE Create a transformation model
 %   TRMCREATE(PDBStruct1, PDBStruct2, nModels) creates a transformation
 %   model from two PDB structures which contain a single model and
 %   correspond to the same protein. Note that amino acid content of both 

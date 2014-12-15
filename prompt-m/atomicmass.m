@@ -1,5 +1,5 @@
 function mass = atomicmass(atomicSymbols)
-%ATOMICMASS Return atomic masses
+%ATOMICMASS Get atomic masses
 %   ATOMICMASS(atomicSymbols) returns masses of the atoms which symbols 
 %   are specified in the cell array atomicSymbols.
 %

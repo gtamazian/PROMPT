@@ -4,6 +4,8 @@ function aa = pdb2aa(PDBStruct)
 %   amino acid single letters. Each cell element corresponds to a single
 %   model of the specified PDB structure.
 %
+%   See also sidechainmass
+%
 %   PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.

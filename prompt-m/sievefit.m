@@ -1,5 +1,5 @@
 function [d, Z, A] = sievefit(X, Y, nMinPoints, epsDistance, epsRotation)
-%SIEVEFIT Apply the sieve-fit procedure to fit Y to X.
+%SIEVEFIT Apply the sieve-fit procedure to fit Y to X
 %   SIEVEFIT(X,Y,nMinPoints, epsDistance, epsRotation) performs the 
 %   sieve-fit procedure to fit points from the matrix Y to the points from 
 %   the matrix X. Three stopping criteria are provided:

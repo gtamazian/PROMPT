@@ -1,5 +1,5 @@
 function cost = trmcostangles(trmodel, angleIndices, angles)
-%TRMCOSTANGLES Transformation cost as a function of specified angles.
+%TRMCOSTANGLES Transformation cost as a function of specified angles
 %   TRMCOSTANGLES(trmodel, angleIndices, angles) calculates cost of the
 %   transformation defined by the model trmodel with the torsion angle 
 %   values specified by the vector angle. Indices of the torsion angles 

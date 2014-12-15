@@ -1,5 +1,5 @@
 function coords = pdbextractcoords(PDBStruct)
-%PDBEXTRACTCOORDS Extracts atom coordinates from a PDB structure
+%PDBEXTRACTCOORDS Extract Cartesian atom coordinates from a PDB structure
 %   PDBEXTRACTCOORDS(PDBStruct) extracts coordinates of the atoms that
 %   constitute a protein from a PDB structure. The function returns a cell
 %   array of matrices. Each matrix corresponds to a separate model from the

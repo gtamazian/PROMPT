@@ -1,5 +1,5 @@
 function coords = trmrestorecoords(trmodel)
-%TRMRESTORECOORDS Restores Cartesian coordinates of transformation atoms
+%TRMRESTORECOORDS Restore Cartesian coordinates of transformation atoms
 %   TRMRESTORECOORDS(trmodel) returns a cell array of matrices containing
 %   Cartesian coordinates of the atoms that constitute configurations of
 %   the transformation trmodel.
