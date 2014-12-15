@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3015708653" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="1269777079" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>PROMPT</param.appname>
     <param.authnamewatermark>Gaik Tamazian</param.authnamewatermark>
     <param.email>gaik (dot) tamazian (at) gmail (dot) com</param.email>
@@ -85,11 +85,42 @@
       <file>${PROJECT_ROOT}/PROMPT logo.png</file>
       <file>${PROJECT_ROOT}/PROMPT.prj</file>
       <file>${PROJECT_ROOT}/README.md</file>
+      <file>${PROJECT_ROOT}/atomicmass.m</file>
       <file>${PROJECT_ROOT}/calmodulin_demo.m</file>
+      <file>${PROJECT_ROOT}/circdist.m</file>
+      <file>${PROJECT_ROOT}/circinterp.m</file>
+      <file>${PROJECT_ROOT}/createmodel.m</file>
+      <file>${PROJECT_ROOT}/cross3d.m</file>
       <file>${PROJECT_ROOT}/demos.xml</file>
+      <file>${PROJECT_ROOT}/getbinarycode.m</file>
       <file>${PROJECT_ROOT}/html</file>
-      <file>${PROJECT_ROOT}/prompt</file>
+      <file>${PROJECT_ROOT}/optimquat.m</file>
+      <file>${PROJECT_ROOT}/pdb2aa.m</file>
+      <file>${PROJECT_ROOT}/pdb2trm.m</file>
+      <file>${PROJECT_ROOT}/pdbbackbone.m</file>
+      <file>${PROJECT_ROOT}/pdbextractcoords.m</file>
+      <file>${PROJECT_ROOT}/pdbmininteratomicdist.m</file>
+      <file>${PROJECT_ROOT}/pdbtrfcmp.m</file>
+      <file>${PROJECT_ROOT}/pdbtrfcost.m</file>
+      <file>${PROJECT_ROOT}/quat2rotmat.m</file>
+      <file>${PROJECT_ROOT}/reduceangles.m</file>
+      <file>${PROJECT_ROOT}/restorecoords.m</file>
       <file>${PROJECT_ROOT}/samples</file>
+      <file>${PROJECT_ROOT}/sidechainmass.m</file>
+      <file>${PROJECT_ROOT}/sievefit.m</file>
+      <file>${PROJECT_ROOT}/trm2pdb.m</file>
+      <file>${PROJECT_ROOT}/trmcost.m</file>
+      <file>${PROJECT_ROOT}/trmcostangles.m</file>
+      <file>${PROJECT_ROOT}/trmcreate.m</file>
+      <file>${PROJECT_ROOT}/trmdistantangleindices.m</file>
+      <file>${PROJECT_ROOT}/trmmininteratomicdist.m</file>
+      <file>${PROJECT_ROOT}/trmobjfunc.m</file>
+      <file>${PROJECT_ROOT}/trmplotadjrmsd.m</file>
+      <file>${PROJECT_ROOT}/trmplotfixedrmsd.m</file>
+      <file>${PROJECT_ROOT}/trmplottranglediff.m</file>
+      <file>${PROJECT_ROOT}/trmrestorecoords.m</file>
+      <file>${PROJECT_ROOT}/trmupdaterotations.m</file>
+      <file>${PROJECT_ROOT}/trmvariateinterpolations.m</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />

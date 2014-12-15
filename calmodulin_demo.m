@@ -1,4 +1,4 @@
-%% Calmodulin conformational motion simulation
+%% Calmodulin conformational motion simulation demo
 % We demonstrate routines of the PROMPT package by simulating
 % conformational motion between two conformations of calmodulin. To launch
 % the example, use the following command: *calmodulin_demo*.
@@ -83,7 +83,7 @@ initial_point = reduceangles(initial_point);
 
 iterNum = 100;
 options = optimoptions('fmincon');
-options = optimoptions(options,'Display', 'none');
+options = optimoptions(options,'Display', 'iter');
 options = optimoptions(options,'MaxIter', iterNum);
 options = optimoptions(options,'MaxFunEvals', Inf);
 options = optimoptions(options,'GradObj','on');
