@@ -11,14 +11,20 @@
     <param.output>${PROJECT_ROOT}/PROMPT.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
+      <item>Bioinformatics Toolbox</item>
+      <item>Optimization Toolbox</item>
       <item>Statistics Toolbox</item>
     </param.products.name>
     <param.products.id>
       <item>1</item>
+      <item>83</item>
+      <item>6</item>
       <item>19</item>
     </param.products.id>
     <param.products.version>
       <item>8.4</item>
+      <item>4.5</item>
+      <item>7.1</item>
       <item>9.1</item>
     </param.products.version>
     <param.platforms />
@@ -46,7 +52,19 @@
 .gitignore
 **/.DS_Store</param.exclude.filters>
     <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;examples/&gt;</param.examples>
+&lt;examples&gt;
+   &lt;exampleCategory name="PROMPT-M"&gt;
+      &lt;example name="calmodulin_demo" type="html"&gt;
+         &lt;file type="source"&gt;/html/calmodulin_demo.html&lt;/file&gt;
+         &lt;file type="main"&gt;/calmodulin_demo.m&lt;/file&gt;
+         &lt;file type="thumbnail"&gt;/html/calmodulin_demo.png&lt;/file&gt;
+         &lt;file type="image"&gt;/html/calmodulin_demo_01.png&lt;/file&gt;
+         &lt;file type="image"&gt;/html/calmodulin_demo_02.png&lt;/file&gt;
+         &lt;file type="image"&gt;/html/calmodulin_demo_03.png&lt;/file&gt;
+         &lt;file type="image"&gt;/html/calmodulin_demo_04.png&lt;/file&gt;
+      &lt;/example&gt;
+   &lt;/exampleCategory&gt;
+&lt;/examples&gt;</param.examples>
     <param.demosxml />
     <param.apps />
     <param.docs />
@@ -67,7 +85,9 @@
       <file>${PROJECT_ROOT}/PROMPT.prj</file>
       <file>${PROJECT_ROOT}/README.md</file>
       <file>${PROJECT_ROOT}/calmodulin_demo.m</file>
-      <file>${PROJECT_ROOT}/prompt-m</file>
+      <file>${PROJECT_ROOT}/demos.xml</file>
+      <file>${PROJECT_ROOT}/html</file>
+      <file>${PROJECT_ROOT}/prompt</file>
       <file>${PROJECT_ROOT}/samples</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
