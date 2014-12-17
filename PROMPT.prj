@@ -1,10 +1,10 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="1269777079" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3469434520" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>PROMPT</param.appname>
     <param.authnamewatermark>Gaik Tamazian</param.authnamewatermark>
     <param.email>gaik (dot) tamazian (at) gmail (dot) com</param.email>
     <param.company>St. Petersburg State University</param.company>
-    <param.summary>PRotein cOnformational Motion Prediction toolbox.</param.summary>
+    <param.summary>PRotein cOnformational Motion PredicTion toolbox.</param.summary>
     <param.description>The toolbox contains a set of functions to create and process coarse-grained models of protein conformational motion.</param.description>
     <param.screenshot>${PROJECT_ROOT}/PROMPT logo.png</param.screenshot>
     <param.version>1.0</param.version>

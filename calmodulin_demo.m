@@ -1,5 +1,5 @@
 %% Calmodulin conformational motion simulation demo
-% We demonstrate routines of the PROMPT package by simulating
+% We demonstrate routines of the PROMPT package by modeling
 % conformational motion between two conformations of calmodulin. To launch
 % the example, use the following command: *calmodulin_demo*.
 
@@ -22,13 +22,13 @@ firstConf = pdbStructure; firstConf.Model = firstConf.Model(1);
 lastConf = pdbStructure; lastConf.Model = lastConf.Model(end);
 
 %%
-% The obtained PDBStruct objects contain a single configuration and will be
-% used to create a transformation model.
+% The obtained PDBStruct objects *firstConf* and *lastConf* contain a 
+% single configuration and will be used to create a transformation model.
 
 %% Creating a transformation model
 % We create a transformation model from a pair of *PDBStruct* objects using
 % the *trmcreate* function from the _PROMPT_ toolbox. The number of
-% intermediate configuration is also specified as an argument of the
+% intermediate configurations is also specified as an argument of the
 % function.
 
 nConf = 8;
@@ -36,9 +36,9 @@ model = trmcreate(firstConf, lastConf, nConf);
 
 %%
 % The next step is to optimize the created model. But prior to the
-% optimization, we study the model in order to determine optimization
-% parameters. First, we visualise the difference between the first and last
-% configurations using the *trmplottranglediff* function.
+% optimization, we study the model in order to determine appropriate
+% optimization parameters. First, we visualise the difference between the 
+% first and last configurations using the *trmplottranglediff* function.
 
 trmplottranglediff(model, true);
 grid;
@@ -63,7 +63,8 @@ nAngles = 20;
 %% Optimization of the transformation model
 % We optimize the transformation model by the interior-point algorithm
 % implemented in the *fmincon* function from _MATLAB Optimization Toolbox_.
-% First, we create the objective function *f* to be passed to *fmincon*.
+% First, we create the objective function *f* to be passed to *fmincon*
+% using the *trmobjfunc* function from the _PROMPT_ package.
 
 angleIndices = trmdistantangleindices(model, nAngles);
 f = @(x) trmobjfunc(model, angleIndices, x);
@@ -78,7 +79,7 @@ initial_point = reduceangles(initial_point);
 %%
 % Also we specify the optimization parameters. The parameter *iterNum*
 % defines the maximum number of optimization procedure iterations. In this
-% demonstration, we specify its value equal to 10 for fast result 
+% demonstration, we specify its value equal to 100 for fast result 
 % computation.
 
 iterNum = 100;
