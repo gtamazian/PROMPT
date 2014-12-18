@@ -1,7 +1,9 @@
-function h = pdbplotadjrmsd(pdbStruct)
+function h = pdbplotadjrmsd(pdbStruct, fitModels)
 %PDBPLOTADJRMSD Plot RMSDs between adjacent models
-%   PDBPLOTADJRMSD(pdbStruct) plots RMSDs between adjacent models of
-%   PDB structures specified in the cell array pdbStruct.
+%   PDBPLOTADJRMSD(pdbStruct, fitModels) plots RMSDs between adjacent 
+%   models of PDB structures specified in the cell array pdbStruct. If the
+%   parameter fitModels is set true, then RMSDs is calculated for models
+%   superposed using the Kabsch transformation.
 %
 %   See also pdbplotfixedrmsd trmplotadjrmsd trmplotfixedrmsd
 %
@@ -10,6 +12,10 @@ function h = pdbplotadjrmsd(pdbStruct)
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
+if nargin < 2
+    fitModels = false;
+end
+
 % if a single PDB structure model is specified instead a cell array, then
 % create a cell array with a single element from it
 if ~iscell(pdbStruct)
@@ -17,12 +23,18 @@ if ~iscell(pdbStruct)
 end
 
 nTrans = length(pdbStruct);
-nConf = length(pdbStruct{1}.Model);
-rmsdValues = zeros(nTrans, nConf-1);
+nModels = length(pdbStruct{1}.Model);
+rmsdValues = zeros(nTrans, nModels-1);
 
 for i = 1:nTrans
     coords = pdbextractcoords(pdbStruct{i});
-    for j = 1:nConf-1
+    if fitModels
+        for j = 2:nModels
+            [~,coords{j}] = procrustes(coords{j-1}, coords{j}, ...
+                'scaling', false, 'reflection', false);
+        end
+    end
+    for j = 1:nModels-1
         rmsdValues(i,j) = mean(sqrt(sum((coords{j+1} - coords{j}).^2,2)));
     end
 end
@@ -34,7 +46,7 @@ ylabel('RMSD in AA');
 % modify x axis tick labels
 ax = gca;
 xticks = get(ax,'XTickLabel');
-for j = 1:nConf-1
+for j = 1:nModels-1
     xticks{j} = [int2str(j),'-',int2str(j+1)];
 end
 set(ax,'XTickLabel',xticks);
