@@ -27,6 +27,8 @@
 %   pdbbackbone              - Return a PDB structure only with backbone atoms
 %   pdbextractcoords         - Extract Cartesian atom coordinates from a PDB structure
 %   pdbmininteratomicdist    - Returns minimal interatomic distances
+%   pdbplotadjrmsd           - Plot RMSDs between adjacent models
+%   pdbplotfixedrmsd         - Plot RMSDs between models and the specified one
 %   pdbtrfcmp                - Compare transformations from PDB structures
 %   pdbtrfcost               - Calculate transformation cost from a PDB structure
 %   quat2rotmat              - Convert a quaternion to a rotation matrix

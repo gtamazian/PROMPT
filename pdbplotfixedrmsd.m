@@ -1,0 +1,37 @@
+function h = pdbplotfixedrmsd(pdbStruct, modelNo)
+%PDBPLOTFIXEDRMSD Plot RMSDs between models and the specified one
+%   PDBPLOTFIXEDRMSD(pdbStruct, modelNo) plots RMSDs between all 
+%   models of transformations specified in the cell array pdbStruct 
+%   and the model with the specified number modelNo.
+%
+%   See also pdbplotadjrmsd trmplotadjrmsd trmplotfixedrmsd
+%
+% PROMPT Toolbox for MATLAB
+
+% By Gaik Tamazian, 2014.
+% gaik (dot) tamazian (at) gmail (dot) com
+
+% if a single PDB structure is specified instead a cell array, then
+% create a cell array with a single element from it
+if ~iscell(pdbStruct)
+    pdbStruct = {pdbStruct};
+end
+
+nTrans = length(pdbStruct);
+nConf = length(pdbStruct{1}.Model);
+rmsdValues = zeros(nTrans, nConf);
+
+for i = 1:nTrans
+    coords = pdbextractcoords(pdbStruct{i});
+    for j = 1:nConf
+        rmsdValues(i,j) = mean(sqrt(sum((coords{j} - ...
+            coords{modelNo}).^2,2)));
+    end
+end
+
+h = plot(transpose(rmsdValues),'-o');
+xlabel('Configuration Number');
+ylabel('RMSD in AA');
+
+end
+
