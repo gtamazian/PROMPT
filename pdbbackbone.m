@@ -10,14 +10,14 @@ function backbonePDBStruct = pdbbackbone(PDBStruct)
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-if length(PDBStruct.Model) > 1
-    error('the specified PDBStruct object contains multiple models')
-end
-
 backbonePDBStruct = PDBStruct;
-backbonePDBStruct.Model.Atom = PDBStruct.Model.Atom( ...
-    ismember({PDBStruct.Model.Atom.AtomName}, {'N' 'C' 'CA'}));
-backbonePDBStruct.Model.HeterogenAtom = [];
+nModels = length(PDBStruct.Model);
+for iModel = 1:nModels
+    backbonePDBStruct.Model(iModel).Atom = ...
+        PDBStruct.Model(iModel).Atom(ismember(...
+        {PDBStruct.Model(iModel).Atom.AtomName}, {'N' 'C' 'CA'}));
+    backbonePDBStruct.Model(iModel).HeterogenAtom = [];
+end
 
 end
 
