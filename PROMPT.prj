@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3469434520" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="3799165188" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>PROMPT</param.appname>
     <param.authnamewatermark>Gaik Tamazian</param.authnamewatermark>
     <param.email>gaik (dot) tamazian (at) gmail (dot) com</param.email>
@@ -100,6 +100,8 @@
       <file>${PROJECT_ROOT}/pdbbackbone.m</file>
       <file>${PROJECT_ROOT}/pdbextractcoords.m</file>
       <file>${PROJECT_ROOT}/pdbmininteratomicdist.m</file>
+      <file>${PROJECT_ROOT}/pdbplotadjrmsd.m</file>
+      <file>${PROJECT_ROOT}/pdbplotfixedrmsd.m</file>
       <file>${PROJECT_ROOT}/pdbtrfcmp.m</file>
       <file>${PROJECT_ROOT}/pdbtrfcost.m</file>
       <file>${PROJECT_ROOT}/quat2rotmat.m</file>
