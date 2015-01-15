@@ -9,7 +9,7 @@ This toolbox is the supplemental material to the paper *Modeling
 conformational change by redox-switch modulation of human succinic
 semialdehyde dehydrogenase* by Gaik Tamazian, Jeong Ho Chang, Sergey
 Knyazev, Eugene Stepanov, Kyung-Jin Kim and Yuri Porozov, submitted to
-PLOS Computational Biology.
+PLOS ONE.
 
 Toolbox requirements:
 
@@ -17,5 +17,3 @@ Toolbox requirements:
 - Bioinformatics Toolbox,
 - Optimization Toolbox,
 - Statistical Toolbox.
-
-The toolbox is also available at [MATLAB Central File Exchange](http://www.mathworks.com/matlabcentral/fileexchange/48820-prompt).
