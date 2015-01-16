@@ -17,3 +17,5 @@ Toolbox requirements:
 - Bioinformatics Toolbox,
 - Optimization Toolbox,
 - Statistical Toolbox.
+
+The toolbox is also available at [MATLAB Central File Exchange](http://www.mathworks.com/matlabcentral/fileexchange/49054-prompt).
