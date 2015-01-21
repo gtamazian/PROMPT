@@ -75,11 +75,9 @@ prevCoords = trmodel.StartCoords;
 for j = 2:nConf+2
     currCoords = restorecoords(trmodel.r(:,j), ...
         trmodel.alpha(:,j), trmodel.psi(:,j));
-    q = optimquat(prevCoords,currCoords);
-    trmodel.U{j} = quat2rotmat(q);
-    r = mean(prevCoords,1) - mean(currCoords*trmodel.U{j},1);
-    prevCoords = currCoords*trmodel.U{j} + ...
-        repmat(r, size(currCoords,1),1);
+    [~,prevCoords,t] = procrustes(prevCoords, currCoords, ...
+        'scaling', false, 'reflection', false);
+    trmodel.U{j} = t.T;
 end
 
 end
