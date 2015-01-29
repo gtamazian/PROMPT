@@ -4,9 +4,11 @@ function cost = prompt(firstConfPdbPath, lastConfPdbPath, ...
 
 firstConf = pdbread(firstConfPdbPath);
 firstConf.Model = firstConf.Model(firstConfInd);
+firstConf = pdbbackbone(firstConf);
 
 lastConf = pdbread(lastConfPdbPath);
 lastConf.Model = lastConf.Model(lastConfInd);
+lastConf = pdbbackbone(lastConf);
 
 model = trmcreate(firstConf, lastConf, nConf, initPointInd);
 
