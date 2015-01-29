@@ -1,10 +1,12 @@
-function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf)
+function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf, initPointInd)
 %TRMCREATE Create a transformation model
-%   TRMCREATE(PDBStruct1, PDBStruct2, nModels) creates a transformation
+%   TRMCREATE(PDBStruct1, PDBStruct2, nModels, initPointInd)
+%   creates a transformation
 %   model from two PDB structures which contain a single model and
 %   correspond to the same protein. Note that amino acid content of both 
 %   structures must be the same. The parameter nConf specifies the number 
 %   of intermediate configurations in the transoformation model.
+%   InitPointInd determines torsion angles interpolation direction.
 %
 %   See also createmodel pdb2trm
 %
@@ -64,27 +66,26 @@ trmodel.alpha = ...
     circinterp(trmodel.alpha(:,1), trmodel.alpha(:,end), nConf);
 
 % Calculate intermediate torsion angles.
+shortArc = true(length(trmodel.psi), 1);
+
+if nargin > 3 && initPointInd ~= 1
+    nLong = ceil(log2(double(initPointInd)));
+    longCand = trmdistantangleindices(trmodel, nLong);
+    shortArc(longCand) = ~str2num(fliplr(dec2bin(initPointInd - 1))');
+end
+
 trmodel.psi = ...
-    circinterp(trmodel.psi(:,1), trmodel.psi(:,end), nConf);
+    circinterp(trmodel.psi(:,1), trmodel.psi(:,end), nConf, shortArc);
+
 
 % Calculate the rotation matrix for superposition of the second
 % conformation to the first one.
-trmodel.U = cell(nConf+2, 1);
-trmodel.U{1} = eye(3);
-prevCoords = trmodel.StartCoords;
-for j = 2:nConf+2
-    currCoords = restorecoords(trmodel.r(:,j), ...
-        trmodel.alpha(:,j), trmodel.psi(:,j));
-    q = optimquat(prevCoords,currCoords);
-    trmodel.U{j} = quat2rotmat(q);
-    r = mean(prevCoords,1) - mean(currCoords*trmodel.U{j},1);
-    prevCoords = currCoords*trmodel.U{j} + ...
-        repmat(r, size(currCoords,1),1);
-end
+trmodel.U = trmsuperpos(trmodel);
 
 end
 
 function result = interpolate(start, finish, M)
+    M = double(M);
     result = ...
         repmat((M:-1:1)/(M+1), length(start), 1).*repmat(start, 1, M) + ...
         repmat((1:M)/(M+1), length(finish), 1).*repmat(finish, 1, M);

@@ -24,6 +24,7 @@ function Z = circinterp(X, Y, nValues, shortArc)
 % gaik (dot) tamazian (at) gmail (dot) com
 
 nAngles = numel(X);
+nValues = double(nValues);
 
 if nargin < 4
     shortArc = true(nAngles, 1);

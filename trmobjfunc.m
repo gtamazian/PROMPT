@@ -1,9 +1,10 @@
-function [F, G] = trmobjfunc(trmodel, angleIndices, angles)
+function [F, G] = trmobjfunc(trmodel, angleIndices, angles, superpose)
 %TRMOBJFUNC Calculate the cost function and its gradient for the model
 %   TRMOBJFUNC(trmodel,indices,angles) returns the cost of the specified
 %   transformation trmodel for the values of torsion angles specified in
 %   the vector angles. The angles are also defined by their indices in the
-%   given vector angleIndices.
+%   given vector angleIndices. If model should be superposed, than
+%   superpose flag should be set
 %
 %   See also trmcost trmcostangles
 %
@@ -14,6 +15,10 @@ function [F, G] = trmobjfunc(trmodel, angleIndices, angles)
 
 trmodel.psi(angleIndices,2:end-1) = ...
     reshape(angles, length(angleIndices), size(trmodel.psi, 2) - 2);
+
+if exist('superpose', 'var') && superpose
+    trmodel.U = trmsuperpos(trmodel);
+end
 
 [F, X] = trmcost(trmodel);
 
