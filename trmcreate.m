@@ -1,4 +1,5 @@
-function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf, initPointInd)
+function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf, ...
+    initPointInd, proteinType)
 %TRMCREATE Create a transformation model
 %   TRMCREATE(PDBStruct1, PDBStruct2, nModels, initPointInd)
 %   creates a transformation
@@ -16,6 +17,9 @@ function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf, initPointInd)
 % gaik (dot) tamazian (at) gmail (dot) com
 
 % check if the specified structures contain a single model
+
+HEAVY_WEIGHT = 10^7;
+
 if length(PDBStruct1.Model) + length(PDBStruct2.Model) > 2
     error('the specified PDBStruct objects contain more than one model');
 end
@@ -48,6 +52,16 @@ trmodel.m(1) = trmodel.m(1) + atomicmass({'H'});
 % Add a mass of a hydroxil group to C-end of the protein.
 trmodel.m(end) = trmodel.m(end) + sum(atomicmass({'O', 'H'}));
 
+if exist('proteinType', 'var')
+    if strcmp(proteinType, 'n-tail') || strcmp(proteinType, 'loop')
+        trmodel.m(1:3) = HEAVY_WEIGHT;
+    end
+    if strcmp(proteinType, 'c-tail') || strcmp(proteinType, 'loop')
+        trmodel.m(end-2:end) = HEAVY_WEIGHT;
+    end
+    trmodel.proteinType = proteinType;
+end
+
 trmodel.r     = zeros(length(trmodel.m) - 1, nConf+2);
 trmodel.alpha = zeros(length(trmodel.m) - 2, nConf+2);
 trmodel.psi   = zeros(length(trmodel.m) - 3, nConf+2);
@@ -68,7 +82,7 @@ trmodel.alpha = ...
 % Calculate intermediate torsion angles.
 shortArc = true(length(trmodel.psi), 1);
 
-if nargin > 3 && initPointInd ~= 1
+if exist('initPointInd', 'var') && initPointInd ~= 1
     nLong = ceil(log2(double(initPointInd)));
     longCand = trmdistantangleindices(trmodel, nLong);
     shortArc(longCand) = ~str2num(fliplr(dec2bin(initPointInd - 1))');

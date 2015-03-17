@@ -1,6 +1,15 @@
 function cost = prompt(firstConfPdbPath, lastConfPdbPath, ...
     firstConfInd, lastConfInd, outPdbPath, ...
-    nConf, nAngles, initPointInd, iterNum, superpose)
+    nConf, nAngles, initPointInd, iterNum, superpose, proteinType)
+
+% nAngels - quantity of angles which are used as parameters in model
+% during optimization. They are the top most changeble angles in model.
+%
+% proteinType - type of model in pdb. There ara some common types: c-tail,
+% n-tail, loop, whole protein.
+
+% Sergey Knyazev
+% sergey.n.knyazev@gmail.com
 
 firstConf = pdbread(firstConfPdbPath);
 firstConf.Model = firstConf.Model(firstConfInd);
@@ -10,7 +19,7 @@ lastConf = pdbread(lastConfPdbPath);
 lastConf.Model = lastConf.Model(lastConfInd);
 lastConf = pdbbackbone(lastConf);
 
-model = trmcreate(firstConf, lastConf, nConf, initPointInd);
+model = trmcreate(firstConf, lastConf, nConf, initPointInd, proteinType);
 
 angleIndices = trmdistantangleindices(model, nAngles);
 f = @(x) trmobjfunc(model, angleIndices, x, superpose);
