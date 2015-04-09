@@ -37,11 +37,8 @@ psiDiff = zeros(nModels, 1);
 for iModel = 1:nModels
     normDiff(iModel) = norm(coords1{iModel} - coords2{iModel});
     % superpose coords2{iModel} to coords1{iModel}
-    q = optimquat(coords1{iModel}, coords2{iModel});
-    U = quat2rotmat(q);
-    r = mean(coords1{iModel}, 1) - mean(coords2{iModel}*U, 1);
-    superposedCoords = coords2{iModel}*U + ...
-        repmat(r, size(coords2{iModel}, 1), 1);
+    [~, superposedCoords] = procrustes(coords1{iModel}, ...
+        coords2{iModel}, 'scaling', false, 'reflection', false);
     rmsd(iModel) = mean(sqrt(sum((coords1{iModel} - ...
         superposedCoords).^2, 2)));
     rDiff(iModel) = norm(r1 - r2);

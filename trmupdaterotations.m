@@ -4,7 +4,7 @@ function result = trmupdaterotations(trmodel)
 %   configuration of the specified transformation trmodel using the Kabsch
 %   algorithm.
 %
-%   See also optimquat quat2rotmat
+%   See also trmcreate
 %
 % PROMPT Toolbox for MATLAB
 
@@ -17,9 +17,9 @@ nModels = length(trmodel.U);
 for j = 2:nModels
     currCoords = restorecoords(trmodel.r(:,j), trmodel.alpha(:,j), ...
         trmodel.psi(:,j));
-    q = optimquat(prevCoords,currCoords);
-    trmodel.U{j} = quat2rotmat(q);
-    prevCoords = currCoords;
+    [~, prevCoords, transform] = procrustes(prevCoords, currCoords, ...
+        'scaling', false, 'reflection', false);
+    trmodel.U{j} = transform.T;
 end
 
 result = trmodel;

@@ -21,7 +21,6 @@
 %   createmodel              - Get transformation bond lengths, planar and torsion angles
 %   cross3d                  - Simplified evalulation of a vector cross product for 3D vectors
 %   getbinarycode            - Generate binary numbers from 0 to 2^N
-%   optimquat                - Get quaternion representing the optimal rotation to fit Y to X
 %   pdb2aa                   - Return a cell array of PDB structure amino acid sequences
 %   pdb2trm                  - Create a transformation model from a PDB structure
 %   pdbbackbone              - Return a PDB structure only with backbone atoms
@@ -31,7 +30,6 @@
 %   pdbplotfixedrmsd         - Plot RMSDs between models and the specified one
 %   pdbtrfcmp                - Compare transformations from PDB structures
 %   pdbtrfcost               - Calculate transformation cost from a PDB structure
-%   quat2rotmat              - Convert a quaternion to a rotation matrix
 %   reduceangles             - Reduce angular values to the interval [-pi, pi]
 %   restorecoords            - Restore Cartesian coordinates of atoms
 %   sidechainmass            - Get atomic masses of protein side chains

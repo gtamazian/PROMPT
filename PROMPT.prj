@@ -94,7 +94,6 @@
       <file>${PROJECT_ROOT}/demos.xml</file>
       <file>${PROJECT_ROOT}/getbinarycode.m</file>
       <file>${PROJECT_ROOT}/html</file>
-      <file>${PROJECT_ROOT}/optimquat.m</file>
       <file>${PROJECT_ROOT}/pdb2aa.m</file>
       <file>${PROJECT_ROOT}/pdb2trm.m</file>
       <file>${PROJECT_ROOT}/pdbbackbone.m</file>
@@ -104,7 +103,6 @@
       <file>${PROJECT_ROOT}/pdbplotfixedrmsd.m</file>
       <file>${PROJECT_ROOT}/pdbtrfcmp.m</file>
       <file>${PROJECT_ROOT}/pdbtrfcost.m</file>
-      <file>${PROJECT_ROOT}/quat2rotmat.m</file>
       <file>${PROJECT_ROOT}/reduceangles.m</file>
       <file>${PROJECT_ROOT}/restorecoords.m</file>
       <file>${PROJECT_ROOT}/samples</file>
@@ -151,7 +149,7 @@
       <vista>false</vista>
       <linux>false</linux>
       <solaris>false</solaris>
-      <osver>10.10.1</osver>
+      <osver>10.10.3</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>maci64</arch>

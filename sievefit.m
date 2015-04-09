@@ -16,7 +16,7 @@ function [d, Z, A] = sievefit(X, Y, nMinPoints, epsDistance, epsRotation)
 %   matrix Z of transformed points from Y, and the matrix A describing the 
 %   obtained rotation.
 %
-%   See also optimquat
+%   See also trmupdaterotations
 %
 % PROMPT Toolbox for MATLAB
 
