@@ -1,4 +1,4 @@
-function h = pdbplotadjrmsd(pdbStruct)
+function [h, rmsdValues] = pdbplotadjrmsd(pdbStruct)
 %PDBPLOTADJRMSD Plot RMSDs between adjacent models
 %   PDBPLOTADJRMSD(pdbStruct, fitModels) plots RMSDs between adjacent 
 %   models of PDB structures specified in the cell array pdbStruct.
