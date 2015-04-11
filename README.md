@@ -8,9 +8,8 @@ functions, type `help PROMPT`.
 This toolbox is the supplemental material to the paper *Modeling 
 conformational change by redox-switch modulation of human succinic
 semialdehyde dehydrogenase* by Gaik Tamazian, Jeong Ho Chang, Sergey
-Knyazev, Eugene Stepanov, Kyung-Jin Kim and Yuri Porozov, submitted to
-PLOS ONE.
-
+Knyazev, Eugene Stepanov, Kyung-Jin Kim and Yuri Porozov (submitted).
+ 
 Toolbox requirements:
 
 - MATLAB (R2014b or higher version recommended),
