@@ -36,7 +36,7 @@ torsAngleDiff = torsAngleDiff(1:angleNum);
 
 h = plot(torsAngleDiff*180/pi,markerType);
 axis([0 length(torsAngleDiff) 0 180]);
-ylabel('Circular Difference Abs Value in Degrees');
+ylabel('Absolute Circular Distance in Degrees');
 if sortAngles
     xlabel('Torsion Angle Rank');
 else
