@@ -16,17 +16,7 @@ nAtoms = size(trmodel.r, 1) + 1;
 coords = cell(1, nConf);
 coords{1} = trmodel.StartCoords;
 
-if ~isfield(trmodel, 'proteinType')
-    aligningAtoms = 1:nAtoms;
-elseif strcmp(trmodel.proteinType, 'loop')
-    aligningAtoms = [1:3, nAtoms-2:nAtoms];
-elseif strcmp(trmodel.proteinType, 'n-tail')
-    aligningAtoms = 1:3;
-elseif strcmp(trmodel.proteinType, 'c-tail')
-    aligningAtoms = nAtoms-2:nAtoms;
-else
-    aligningAtoms = 1:nAtoms;
-end
+aligningAtoms = trmGetAtomsIndsForAlign(trmodel);
 
 firstConfTranslation = repmat(mean(coords{1}(aligningAtoms,:),1),nAtoms,1);
 

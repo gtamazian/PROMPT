@@ -28,6 +28,13 @@ end
 PDBStruct1 = pdbbackbone(PDBStruct1);
 PDBStruct2 = pdbbackbone(PDBStruct2);
 
+for i = 1:3
+    if strcmp(PDBStruct1.Model.Atom(i).AtomName, 'CA')
+        caShift = i-2;
+        break
+    end
+end
+
 % Get atomic masses of backbone atoms.
 trmodel = struct('m', atomicmass({PDBStruct1.Model.Atom.element}), ...
     'StartCoords', atomiccoords(PDBStruct1), ...
@@ -37,14 +44,17 @@ trmodel = struct('m', atomicmass({PDBStruct1.Model.Atom.element}), ...
 % atomic masses of alpha carbons. Also add a mass of one hydrogen atom.
 alphaCarbonAtoms = PDBStruct1.Model.Atom( ...
     ismember({PDBStruct1.Model.Atom.AtomName}, {'CA'}));
-trmodel.m(2:3:end) = trmodel.m(2:3:end) + ...
+trmodel.m(1 + mod(1 + caShift, 3):3:end) = ...
+    trmodel.m(1 + mod(1 + caShift, 3):3:end) + ...
     sidechainmass({alphaCarbonAtoms.resName}) + atomicmass({'H'});
 
 % Add masses of hydrogen atoms to nitrogen atoms of the backbone.
-trmodel.m(1:3:end) = trmodel.m(1:3:end) + atomicmass({'H'});
+trmodel.m(1 + mod(3 + caShift, 3):3:end) = ...
+    trmodel.m(1 + mod(3 + caShift, 3):3:end)+atomicmass({'H'});
 
 % Add masses of oxygen atoms to carbon atoms of the backbone.
-trmodel.m(3:3:end) = trmodel.m(3:3:end) + atomicmass({'O'});
+trmodel.m(1 + mod(2 + caShift, 3):3:end) ...
+    = trmodel.m(1 + mod(2 + caShift, 3):3:end)+atomicmass({'O'});
 
 % Add a mass of a hydrogen atom to N-end of the protein.
 trmodel.m(1) = trmodel.m(1) + atomicmass({'H'});
@@ -52,12 +62,12 @@ trmodel.m(1) = trmodel.m(1) + atomicmass({'H'});
 % Add a mass of a hydroxil group to C-end of the protein.
 trmodel.m(end) = trmodel.m(end) + sum(atomicmass({'O', 'H'}));
 
-if exist('proteinType', 'var')
+if exist('proteinType', 'var') && ~isempty(proteinType)
     if strcmp(proteinType, 'n-tail') || strcmp(proteinType, 'loop')
-        trmodel.m(1:3) = HEAVY_WEIGHT;
+        trmodel.m(end-2:end) = HEAVY_WEIGHT;
     end
     if strcmp(proteinType, 'c-tail') || strcmp(proteinType, 'loop')
-        trmodel.m(end-2:end) = HEAVY_WEIGHT;
+        trmodel.m(1:3) = HEAVY_WEIGHT;
     end
     trmodel.proteinType = proteinType;
 end
@@ -80,9 +90,10 @@ trmodel.alpha = ...
     circinterp(trmodel.alpha(:,1), trmodel.alpha(:,end), nConf);
 
 % Calculate intermediate torsion angles.
-shortArc = true(length(trmodel.psi), 1);
+shortArc = true(size(trmodel.psi,1), 1);
 
-if exist('initPointInd', 'var') && initPointInd ~= 1
+if exist('initPointInd', 'var') && ~isempty(initPointInd) ...
+        && initPointInd ~= 1
     nLong = ceil(log2(double(initPointInd)));
     longCand = trmdistantangleindices(trmodel, nLong);
     shortArc(longCand) = ~str2num(fliplr(dec2bin(initPointInd - 1))');

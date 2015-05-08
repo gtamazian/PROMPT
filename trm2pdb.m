@@ -12,6 +12,8 @@ function PDBStruct = trm2pdb(trmodel, initialPDBStruct)
 % By Gaik Tamazian, 2014.
 % gaik (dot) tamazian (at) gmail (dot) com
 
+initialPDBStruct = pdbbackbone(initialPDBStruct);
+
 PDBStruct = initialPDBStruct;
 PDBStruct.Model = PDBStruct.Model(1);
 nModels = size(trmodel.psi, 2);

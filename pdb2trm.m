@@ -1,4 +1,4 @@
-function trmodel = pdb2trm(PDBStruct)
+function trmodel = pdb2trm(PDBStruct, proteinType)
 %PDB2TRM Create a transformation model from a PDB structure
 %   PDB2TRM(PDBStruct) creates a transformation model which represents a
 %   transformation from the specified PDB structure.
@@ -19,6 +19,7 @@ trmodel = trmcreate(struct1,struct2,nModels-2);
 
 [~,~,psi] = createmodel(PDBStruct);
 trmodel.psi(:,2:end-1) = psi(:,2:end-1);
+trmodel.proteinType = proteinType;
 
 end
 
