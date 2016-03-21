@@ -33,7 +33,7 @@ end
 
 h = plot(transpose(rmsdValues),'-o');
 xlabel('Configuration Pair');
-ylabel('RMSD in AA');
+ylabel('RMSD in Angstroms');
 
 % modify x axis tick labels
 ax = gca;

@@ -25,7 +25,7 @@ end
 
 h = plot(transpose(rmsdValues), '-o');
 xlabel('Configuration Number');
-ylabel('RMSD in AA');
+ylabel('RMSD in Angstroms');
 
 end
 
