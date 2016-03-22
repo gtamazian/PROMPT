@@ -22,9 +22,9 @@
       <item>19</item>
     </param.products.id>
     <param.products.version>
-      <item>8.4</item>
-      <item>4.5</item>
-      <item>7.1</item>
+      <item>9.0</item>
+      <item>4.6</item>
+      <item>7.4</item>
       <item>9.1</item>
     </param.products.version>
     <param.platforms />
@@ -50,6 +50,7 @@
 %
 **/*.git
 .gitignore
+**/auxiliary
 **/.DS_Store</param.exclude.filters>
     <param.examples>&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;examples&gt;
@@ -68,6 +69,7 @@
     <param.demosxml />
     <param.apps />
     <param.docs />
+    <param.matlabpath.excludes />
     <unset>
       <param.version />
       <param.output />
@@ -75,6 +77,7 @@
       <param.demosxml />
       <param.apps />
       <param.docs />
+      <param.matlabpath.excludes />
     </unset>
     <fileset.rootdir>
       <file>/Users/gtamazian/Programs/PROMPT</file>
@@ -83,7 +86,6 @@
       <file>${PROJECT_ROOT}/Contents.m</file>
       <file>${PROJECT_ROOT}/LICENSE</file>
       <file>${PROJECT_ROOT}/PROMPT logo.png</file>
-      <file>${PROJECT_ROOT}/PROMPT.prj</file>
       <file>${PROJECT_ROOT}/README.md</file>
       <file>${PROJECT_ROOT}/atomicmass.m</file>
       <file>${PROJECT_ROOT}/calmodulin_demo.m</file>
@@ -101,6 +103,7 @@
       <file>${PROJECT_ROOT}/pdbmininteratomicdist.m</file>
       <file>${PROJECT_ROOT}/pdbplotadjrmsd.m</file>
       <file>${PROJECT_ROOT}/pdbplotfixedrmsd.m</file>
+      <file>${PROJECT_ROOT}/pdbplottrfcmp.m</file>
       <file>${PROJECT_ROOT}/pdbtrfcmp.m</file>
       <file>${PROJECT_ROOT}/pdbtrfcost.m</file>
       <file>${PROJECT_ROOT}/reduceangles.m</file>
@@ -110,7 +113,6 @@
       <file>${PROJECT_ROOT}/sievefit.m</file>
       <file>${PROJECT_ROOT}/trm2pdb.m</file>
       <file>${PROJECT_ROOT}/trmcost.m</file>
-      <file>${PROJECT_ROOT}/trmcostangles.m</file>
       <file>${PROJECT_ROOT}/trmcreate.m</file>
       <file>${PROJECT_ROOT}/trmdistantangleindices.m</file>
       <file>${PROJECT_ROOT}/trmmininteratomicdist.m</file>
@@ -130,15 +132,8 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>/Applications/MATLAB_R2014b.app</root>
-      <toolboxes>
-        <toolbox name="matlabcoder" />
-      </toolboxes>
-      <toolbox>
-        <matlabcoder>
-          <enabled>true</enabled>
-        </matlabcoder>
-      </toolbox>
+      <root>/Applications/MATLAB_R2016a.app</root>
+      <toolboxes />
     </matlab>
     <platform>
       <unix>true</unix>
@@ -149,7 +144,7 @@
       <vista>false</vista>
       <linux>false</linux>
       <solaris>false</solaris>
-      <osver>10.10.3</osver>
+      <osver>10.11.3</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>maci64</arch>

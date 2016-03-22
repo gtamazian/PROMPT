@@ -4,7 +4,7 @@ function angleIndices = trmdistantangleindices(trmodel, nAngles)
 %   torsion angles which values in the first and last model configurations
 %   differ at most.
 %
-%   See also trmcostangles
+%   See also trmobjfunc
 %
 % PROMPT Toolbox for MATLAB
 

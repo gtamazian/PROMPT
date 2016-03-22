@@ -5,7 +5,7 @@ function [F, G] = trmobjfunc(trmodel, angleIndices, angles)
 %   the vector angles. The angles are also defined by their indices in the
 %   given vector angleIndices.
 %
-%   See also trmcost trmcostangles
+%   See also trmcost
 %
 % PROMPT Toolbox for MATLAB
 

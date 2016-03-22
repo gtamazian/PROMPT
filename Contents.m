@@ -36,7 +36,6 @@
 %   sievefit                 - Apply the sieve-fit procedure to fit Y to X
 %   trm2pdb                  - Convert a transformation model to a PDB structure object
 %   trmcost                  - Calculate transformation cost
-%   trmcostangles            - Transformation cost as a function of specified angles
 %   trmcreate                - Create a transformation model
 %   trmdistantangleindices   - Get indices of the most distant torsion angles
 %   trmmininteratomicdist    - Get minimal interatomic distances

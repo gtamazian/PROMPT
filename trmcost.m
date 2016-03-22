@@ -6,7 +6,7 @@ function [cost, X] = trmcost(trmodel)
 %   adjacent model configurations. Also the function returns restored
 %   coordinates of transformation atoms as a cell array of matrices X.
 %
-%   See also trmcostangles trmobjfunc pdbtrfcost
+%   See also trmobjfunc pdbtrfcost
 %
 % PROMPT Toolbox for MATLAB
 
