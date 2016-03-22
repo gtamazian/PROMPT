@@ -31,7 +31,12 @@ for i = 1:nTrans
     end
 end
 
-h = plot(transpose(rmsdValues),'-o');
+markers = {'s', 'o', '^', '+', 'x', 'd', 'v', '*', 'p', 'h'};
+for i = 1:size(rmsdValues, 1)
+    h = plot(rmsdValues(i,:), ['-', markers{i}]);
+    hold on
+end
+hold off
 xlabel('Configuration Pair');
 ylabel('RMSD in Angstroms');
 
