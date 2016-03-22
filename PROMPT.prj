@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="1285323009" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
+  <configuration build-checksum="2311858676" file="/Users/gtamazian/Programs/PROMPT/PROMPT.prj" location="/Users/gtamazian/Programs/PROMPT" name="PROMPT" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>PROMPT</param.appname>
     <param.authnamewatermark>Gaik Tamazian</param.authnamewatermark>
     <param.email>gaik (dot) tamazian (at) gmail (dot) com</param.email>
@@ -7,7 +7,7 @@
     <param.summary>PRotein cOnformational Motion PredicTion toolbox.</param.summary>
     <param.description>The toolbox contains a set of functions to create and process coarse-grained models of protein conformational motion. The model implemented in the toolbox is described in the following paper: Tamazian, G., Ho Chang, J., Knyazev, S., Stepanov, E., Kim, K. J., &amp; Porozov, Y. (2015). Modeling conformational redox‐switch modulation of human succinic semialdehyde dehydrogenase. Proteins: Structure, Function, and Bioinformatics, 83(12), 2217-2229.</param.description>
     <param.screenshot>${PROJECT_ROOT}/PROMPT logo.png</param.screenshot>
-    <param.version>1.0</param.version>
+    <param.version>1.1</param.version>
     <param.output>${PROJECT_ROOT}/PROMPT.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -71,7 +71,6 @@
     <param.docs />
     <param.matlabpath.excludes />
     <unset>
-      <param.version />
       <param.output />
       <param.platforms />
       <param.demosxml />
@@ -83,6 +82,7 @@
       <file>/Users/gtamazian/Programs/PROMPT</file>
     </fileset.rootdir>
     <fileset.rootfiles>
+      <file>${PROJECT_ROOT}/CHANGELOG.md</file>
       <file>${PROJECT_ROOT}/Contents.m</file>
       <file>${PROJECT_ROOT}/LICENSE</file>
       <file>${PROJECT_ROOT}/PROMPT logo.png</file>
