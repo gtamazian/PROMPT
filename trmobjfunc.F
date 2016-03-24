@@ -171,4 +171,42 @@
       return
       end subroutine restoreCoords
 
+      ! Procedure to restore Cartesian coordinates for all
+      ! configurations of a transformation.
+      subroutine trRestoreCoords(r, alpha, psi, atom_num, conf_num,
+     +  rot_mat, start_coords, coords)
+        real(kind=8), intent(in),  allocatable :: r(:,:)
+        real(kind=8), intent(in),  allocatable :: alpha(:,:)
+        real(kind=8), intent(in),  allocatable :: psi(:,:)
+        integer,      intent(in)               :: atom_num
+        integer,      intent(in)               :: conf_num
+        real(kind=8), intent(in),  allocatable :: rot_mat(:,:,:)
+        real(kind=8), intent(in),  allocatable :: start_coords(:,:) 
+        real(kind=8), intent(out), allocatable, target :: coords(:,:,:)
+
+        integer                    :: i, j
+        real(kind=8), dimension(3) :: curr_trans, first_trans
+        real(kind=8), pointer      :: curr_conf(:,:)
+
+        allocate(coords(conf_num, atom_num, 3))
+
+        coords(1, :, :) = start_coords
+        first_trans = sum(start_coords, 1) / atom_num
+
+        do i = 2, conf_num
+          curr_conf => coords(i, :, :)
+          call restoreCoords(r(:, i), alpha(:, i), psi(:, i), conf_num,
+     +      curr_conf)
+          ! apply the rotation and the transformation
+          curr_conf = matmul(curr_conf, rot_mat(i, :, :))
+          curr_trans = sum(curr_conf, 1) / atom_num
+          do j = 1, atom_num
+            curr_conf(j, :) = curr_conf(j, :) - curr_trans + 
+     +        first_trans
+          end do
+        end do
+
+      return
+      end subroutine trRestoreCoords
+
 
