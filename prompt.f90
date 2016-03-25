@@ -69,12 +69,12 @@ contains
   ! configurations of a transformation.
   subroutine trRestoreCoords(m, coords)
     type(TrModel), intent(in)          :: m
-    real(kind=8),  intent(out), target :: &
-        coords(m%atom_num, 3, m%conf_num)
+    real(kind=8),  intent(out), target :: coords(m%atom_num, 3, &
+      m%conf_num)
 
-    integer                            :: i, j
-    real(kind=8), dimension(3)         :: curr_trans, first_trans
-    real(kind=8), pointer :: curr_conf(:,:)
+    integer                    :: i, j
+    real(kind=8), dimension(3) :: curr_trans, first_trans
+    real(kind=8), pointer      :: curr_conf(:,:)
 
     coords(1, :, :) = m%start_coords
     first_trans = sum(m%start_coords, 1) / m%atom_num
@@ -99,10 +99,10 @@ contains
   ! returns Cartesian coordinates of configuration atoms restored from
   ! their internal coordinates
   subroutine trCost(m, p, cost_val, tr_coords)
-    type(TrModel), intent(in) :: m
-    integer, intent(in)       :: p
-    real(kind=8), intent(out) :: cost_val
-    real(kind=8), intent(out) :: tr_coords(m%atom_num, 3, m%conf_num)
+    type(TrModel), intent(in)  :: m
+    integer,       intent(in)  :: p
+    real(kind=8),  intent(out) :: cost_val
+    real(kind=8),  intent(out) :: tr_coords(m%atom_num, 3, m%conf_num)
 
     integer                                         :: i
     real(kind=8), dimension(m%atom_num, m%conf_num) :: distances
@@ -119,6 +119,32 @@ contains
   
   return
   end subroutine trCost
+
+  ! Procedure implementing the objective function
+  subroutine objFunc(m, angle_num, angle_indices, angle_values, p, &
+    func_val, grad_vec)
+    type(TrModel), intent(in)                        :: m
+    integer,       intent(in)                        :: angle_num
+    integer,       intent(in),  dimension(angle_num) :: angle_indices
+    real(kind=8),  intent(in),  dimension(angle_num) :: angle_values
+    integer,       intent(in)                        :: p
+    real(kind=8),  intent(out)                       :: func_val
+    real(kind=8),  intent(out), dimension(angle_num) :: grad_vec
+
+    type(TrModel) :: temp_m
+    real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: coords
+
+    temp_m = m
+    temp_m%psi(angle_indices, 2:m%conf_num - 1) = &
+      reshape(angle_values, [angle_num, m%conf_num - 1])
+
+    call trCost(temp_m, p, func_val, coords)
+
+    ! TODO: add the gradient computation below
+    grad_vec = 0
+  
+  return
+  end subroutine objFunc
 
 end module prompt
 
