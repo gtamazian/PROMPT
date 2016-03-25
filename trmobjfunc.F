@@ -3,6 +3,7 @@
       ! Gateway routine
       subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
+      use prompt, only: objFunc, TrModel
       implicit none
 
       mwPointer     :: plhs(*), prhs(*)
@@ -23,14 +24,12 @@
       mwPointer      :: fval_ptr, grad_ptr
 
       ! Arguments for computational routines
-      mwPointer                                   :: atom_num, conf_num
-      mwPointer                                   :: angle_num
-      real(kind=8), allocatable, dimension(:)     :: masses
-      real(kind=8), allocatable, dimension(:,:)   :: r, alpha, psi
-      real(kind=8), allocatable, dimension(:,:)   :: str_crd, end_crd
-      real(kind=8), allocatable, dimension(:,:,:) :: rot_mat
-      real(kind=8), allocatable, dimension(:)     :: angle_values
-      integer(kind=4), allocatable, dimension(:)  :: angle_indices
+      type(TrModel) :: m
+      mwPointer     :: atom_num, conf_num, angle_num
+      real(kind=8), allocatable, dimension(:) :: angle_values
+      real(kind=8), allocatable, dimension(:) :: angle_indices
+      real(kind=8)                            :: func_val
+      real(kind=8), allocatable, dimension(:) :: grad_vec
       
       ! Check for the proper number of function arguments
       if (nrhs .ne. 3) then
@@ -59,22 +58,22 @@
 
       ! Get pointers for input data
       model_ptr   = prhs(1)
-      index_ptr   = prhs(2)
-      angle_ptr   = prhs(3)
+      index_ptr   = mxGetPr(prhs(2))
+      angle_ptr   = mxGetPr(prhs(3))
 
       masses_ptr  = mxGetPr(mxGetField(model_ptr, 1, 'm'))
-      r_ptr       = mxGetField(model_ptr, 1, 'r')
-      alpha_ptr   = mxGetField(model_ptr, 1, 'alpha')
-      psi_ptr     = mxGetField(model_ptr, 1, 'psi')
-      str_crd_ptr = mxGetField(model_ptr, 1, 'StartCoords')
-      end_crd_ptr = mxGetField(model_ptr, 1, 'FinishCoords')
-      rot_mat_ptr = mxGetField(model_ptr, 1, 'U')
+      r_ptr       = mxGetPr(mxGetField(model_ptr, 1, 'r'))
+      alpha_ptr   = mxGetPr(mxGetField(model_ptr, 1, 'alpha'))
+      psi_ptr     = mxGetPr(mxGetField(model_ptr, 1, 'psi'))
+      str_crd_ptr = mxGetPr(mxGetField(model_ptr, 1, 'StartCoords'))
+      rot_mat_ptr = mxGetPr(mxGetField(model_ptr, 1, 'U'))
 
       ! Determine the model parameters: the number of atoms and the
       ! number of configurations
-      atom_num  = mxGetM(r_ptr) + 1
-      conf_num  = mxGetN(r_ptr)
-      angle_num = mxGetM(angle_ptr) * mxGetN(angle_ptr)
+      atom_num  = mxGetM(mxGetField(model_ptr, 1, 'r')) + 1
+      conf_num  = mxGetN(mxGetField(model_ptr, 1, 'r'))
+      angle_num = mxGetM(mxGetField(model_ptr, 1, 'psi')) * 
+     +  mxGetN(mxGetField(model_ptr, 1, 'psi'))
 
       ! Create result arrays
       plhs(1) = mxCreateDoubleMatrix(1, 1, 0.0)
@@ -85,34 +84,46 @@
       grad_ptr = mxGetPr(plhs(2))
 
       ! Allocate Fortran arrays
-      allocate(masses(atom_num))
-      allocate(r(atom_num - 1, conf_num))
-      allocate(alpha(atom_num - 2, conf_num))
-      allocate(psi(atom_num - 3, conf_num))
-      allocate(str_crd(atom_num, 3))
-      allocate(end_crd(atom_num, 3))
-      allocate(rot_mat(conf_num, 3, 3))
-      allocate(angle_values(angle_num))
+      allocate(m%atom_masses(atom_num))
+      allocate(m%r(atom_num - 1, conf_num))
+      allocate(m%alpha(atom_num - 2, conf_num))
+      allocate(m%psi(atom_num - 3, conf_num))
+      allocate(m%start_coords(atom_num, 3))
+      allocate(m%rot_mat(3, 3, conf_num))
+      allocate(angle_values(angle_num * (conf_num - 2)))
       allocate(angle_indices(angle_num))
+      allocate(grad_vec(angle_num))
+
+      m%conf_num = int(conf_num, 4)
+      m%atom_num = int(atom_num, 4)
 
       ! Copy the input data to Fortran arrays
-      call mxCopyPtrToReal8(masses_ptr, masses, atom_num)
-      call mxCopyPtrToReal8(r_ptr, r, (atom_num - 1) * conf_num)
-      call mxCopyPtrToReal8(alpha_ptr, alpha, (atom_num - 2) * 
+      call mxCopyPtrToReal8(masses_ptr, m%atom_masses, atom_num)
+      call mxCopyPtrToReal8(r_ptr, m%r, (atom_num - 1) * conf_num)
+      call mxCopyPtrToReal8(alpha_ptr, m%alpha, (atom_num - 2) * 
      +  conf_num)
-      call mxCopyPtrToReal8(psi_ptr, psi, (atom_num - 3) * conf_num)
-      call mxCopyPtrToReal8(str_crd_ptr, str_crd, atom_num * 3)
-      call mxCopyPtrToReal8(end_crd_ptr, end_crd, atom_num * 3)
-      call mxCopyPtrToReal8(rot_mat_ptr, rot_mat, conf_num * 3 * 3)
-      call mxCopyPtrToReal8(angle_ptr, angle_values, angle_num)
-      call mxCopyPtrToInteger4(index_ptr, angle_indices, angle_num)
+      call mxCopyPtrToReal8(psi_ptr, m%psi, (atom_num - 3) * 
+     +  conf_num)
+      call mxCopyPtrToReal8(str_crd_ptr, m%start_coords, 
+     +  atom_num * 3)
+      call mxCopyPtrToReal8(rot_mat_ptr, m%rot_mat, conf_num * 3 * 3)
+      call mxCopyPtrToReal8(index_ptr, angle_indices, angle_num)
+      call mxCopyPtrToReal8(angle_ptr, angle_values, 
+     +  angle_num * (conf_num - 2))
 
       ! Launch the computational routines
-      call mexPrint("TODO")
+      call objFunc(m, int(angle_num, 4), int(angle_indices, 4), 
+     +  angle_values, 2, func_val, grad_vec)
+
+      ! Copy the output data back to MATLAB data structures
+      call mxCopyReal8ToPtr(func_val, fval_ptr, 1)
+      call mxCopyReal8ToPtr(grad_vec, grad_ptr, angle_num)
 
       ! Deallocate Fortran arrays
-      deallocate(masses, r, alpha, psi, str_crd, end_crd, rot_mat,
-     +  angle_values, angle_indices)
+      deallocate(m%atom_masses)
+      deallocate(m%r, m%alpha, m%psi)
+      deallocate(m%start_coords, m%rot_mat)
+      deallocate(angle_values, angle_indices)
 
       return
       end subroutine mexFunction

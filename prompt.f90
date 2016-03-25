@@ -76,7 +76,7 @@ contains
     real(kind=8), dimension(3) :: curr_trans, first_trans
     real(kind=8), pointer      :: curr_conf(:,:)
 
-    coords(1, :, :) = m%start_coords
+    coords(:, :, 1) = m%start_coords
     first_trans = sum(m%start_coords, 1) / m%atom_num
 
     do i = 2, m%conf_num
@@ -126,17 +126,24 @@ contains
     type(TrModel),   intent(in)                        :: m
     integer(kind=4), intent(in)                        :: angle_num
     integer(kind=4), intent(in),  dimension(angle_num) :: angle_indices
-    real(kind=8),    intent(in),  dimension(angle_num) :: angle_values
+    real(kind=8),    intent(in),  &
+      dimension(angle_num * (m%conf_num - 2))          :: angle_values
     integer(kind=4), intent(in)                        :: p
     real(kind=8),    intent(out)                       :: func_val
     real(kind=8),    intent(out), dimension(angle_num) :: grad_vec
 
     type(TrModel) :: temp_m
+    integer       :: i
     real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: coords
+    real(kind=8), dimension(angle_num, m%conf_num - 2) :: temp_angles
 
+    temp_angles = reshape(angle_values, [angle_num, m%conf_num - 2])
+    
     temp_m = m
-    temp_m%psi(angle_indices, 2:m%conf_num - 1) = &
-      reshape(angle_values, [angle_num, m%conf_num - 1])
+    do i = 1, angle_num
+      temp_m%psi(angle_indices(i), 2:(m%conf_num - 1)) = &
+        temp_angles(i, :)
+    end do
 
     call trCost(temp_m, p, func_val, coords)
 
