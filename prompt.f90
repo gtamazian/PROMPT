@@ -2,6 +2,14 @@ module prompt
 
   implicit none
   
+  type :: TrModel
+    real(kind=8), allocatable :: r(:,:), alpha(:,:), psi(:,:)
+    real(kind=8), allocatable :: start_coords(:,:)
+    real(kind=8), allocatable :: atom_masses(:)
+    real(kind=8), allocatable :: rot_mat(:,:,:)
+    integer                   :: atom_num, conf_num
+  end type TrModel
+
 contains
   
   ! Procedure implementing the cross product of a pair of vectors
@@ -59,34 +67,27 @@ contains
 
   ! Procedure to restore Cartesian coordinates for all
   ! configurations of a transformation.
-  subroutine trRestoreCoords(r, alpha, psi, atom_num, conf_num, &
-    rot_mat, start_coords, coords)
-    real(kind=8), intent(in),  allocatable :: r(:,:)
-    real(kind=8), intent(in),  allocatable :: alpha(:,:)
-    real(kind=8), intent(in),  allocatable :: psi(:,:)
-    integer,      intent(in)               :: atom_num
-    integer,      intent(in)               :: conf_num
-    real(kind=8), intent(in),  allocatable :: rot_mat(:,:,:)
-    real(kind=8), intent(in),  allocatable :: start_coords(:,:) 
+  subroutine trRestoreCoords(model, coords)
+    type(TrModel), intent(in)                      :: model
     real(kind=8), intent(out), allocatable, target :: coords(:,:,:)
 
     integer                            :: i, j
     real(kind=8), dimension(3)         :: curr_trans, first_trans
     real(kind=8), pointer :: curr_conf(:,:)
 
-    allocate(coords(conf_num, atom_num, 3))
+    allocate(coords(model%conf_num, model%atom_num, 3))
 
-    coords(1, :, :) = start_coords
-    first_trans = sum(start_coords, 1) / atom_num
+    coords(1, :, :) = model%start_coords
+    first_trans = sum(model%start_coords, 1) / model%atom_num
 
-    do i = 2, conf_num
+    do i = 2, model%conf_num
       curr_conf => coords(i, :, :)
-      call restoreCoords(r(:, i), alpha(:, i), psi(:, i), conf_num, &
-        curr_conf)
+      call restoreCoords(model%r(:, i), model%alpha(:, i), &
+        model%psi(:, i), model%conf_num, curr_conf)
       ! apply the rotation and the transformation
-      curr_conf = matmul(curr_conf, rot_mat(i, :, :))
-      curr_trans = sum(curr_conf, 1) / atom_num
-      do j = 1, atom_num
+      curr_conf = matmul(curr_conf, model%rot_mat(i, :, :))
+      curr_trans = sum(curr_conf, 1) / model%atom_num
+      do j = 1, model%atom_num
         curr_conf(j, :) = curr_conf(j, :) - curr_trans + &
           first_trans
       end do
@@ -98,31 +99,24 @@ contains
   ! Procedure to calculate transtormation cost; note that it also
   ! returns Cartesian coordinates of configuration atoms restored from
   ! their internal coordinates
-  subroutine trCost(r, alpha, psi, atom_masses, atom_num, conf_num, &
-    rot_mat, start_coords, p, cost_val, tr_coords)
-    real(kind=8), intent(in), allocatable  :: r(:,:)
-    real(kind=8), intent(in), allocatable  :: alpha(:,:)
-    real(kind=8), intent(in), allocatable  :: psi(:,:)
-    real(kind=8), intent(in), allocatable  :: atom_masses(:)
-    integer, intent(in)                    :: atom_num, conf_num, p
-    real(kind=8), intent(in),  allocatable :: rot_mat(:,:,:)
-    real(kind=8), intent(in),  allocatable :: start_coords(:,:) 
+  subroutine trCost(model, p, cost_val, tr_coords)
+    type(TrModel), intent(in)              :: model
+    integer, intent(in)                    :: p
     real(kind=8), intent(out)              :: cost_val
     real(kind=8), intent(out), allocatable :: tr_coords(:,:,:)
 
-    integer                                     :: i
-    real(kind=8), dimension(atom_num, conf_num) :: distances
+    integer                                                 :: i
+    real(kind=8), dimension(model%atom_num, model%conf_num) :: distances
     
-    call trRestoreCoords(r, alpha, psi, atom_num, conf_num, rot_mat, &
-      start_coords, tr_coords)
+    call trRestoreCoords(model, tr_coords)
       
     cost_val = 0
-    do i = 2, conf_num
+    do i = 2, model%conf_num
       distances(:, i) = sqrt(sum((tr_coords(i, :, :) - &
         tr_coords(i - 1, :, :)) ** 2, 2))
     end do
 
-    cost_val = sum(atom_masses * sum(distances ** p, 2))
+    cost_val = sum(model%atom_masses * sum(distances ** p, 2))
   
   return
   end subroutine trCost
