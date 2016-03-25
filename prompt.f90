@@ -28,11 +28,11 @@ contains
   ! Procedure to restore Cartesian coordinates from internal ones
   ! for a single configuration
   subroutine restoreCoords(r, alpha, psi, atom_num, coords)
-    real(kind=8), intent(in)  :: r(:)
-    real(kind=8), intent(in)  :: alpha(:)
-    real(kind=8), intent(in)  :: psi(:)
+    real(kind=8), intent(in)  :: r(atom_num - 1)
+    real(kind=8), intent(in)  :: alpha(atom_num -2)
+    real(kind=8), intent(in)  :: psi(atom_num - 3)
     integer,      intent(in)  :: atom_num
-    real(kind=8), intent(out) :: coords(:,:)
+    real(kind=8), intent(out) :: coords(atom_num, 3)
 
     integer                       :: i
     real(kind=8), dimension(3)    :: bc, n
@@ -67,27 +67,26 @@ contains
 
   ! Procedure to restore Cartesian coordinates for all
   ! configurations of a transformation.
-  subroutine trRestoreCoords(model, coords)
-    type(TrModel), intent(in)                      :: model
-    real(kind=8), intent(out), allocatable, target :: coords(:,:,:)
+  subroutine trRestoreCoords(m, coords)
+    type(TrModel), intent(in)          :: m
+    real(kind=8),  intent(out), target :: &
+        coords(m%conf_num, m%atom_num, 3)
 
     integer                            :: i, j
     real(kind=8), dimension(3)         :: curr_trans, first_trans
     real(kind=8), pointer :: curr_conf(:,:)
 
-    allocate(coords(model%conf_num, model%atom_num, 3))
+    coords(1, :, :) = m%start_coords
+    first_trans = sum(m%start_coords, 1) / m%atom_num
 
-    coords(1, :, :) = model%start_coords
-    first_trans = sum(model%start_coords, 1) / model%atom_num
-
-    do i = 2, model%conf_num
+    do i = 2, m%conf_num
       curr_conf => coords(i, :, :)
-      call restoreCoords(model%r(:, i), model%alpha(:, i), &
-        model%psi(:, i), model%conf_num, curr_conf)
+      call restoreCoords(m%r(:, i), m%alpha(:, i), &
+        m%psi(:, i), m%conf_num, curr_conf)
       ! apply the rotation and the transformation
-      curr_conf = matmul(curr_conf, model%rot_mat(i, :, :))
-      curr_trans = sum(curr_conf, 1) / model%atom_num
-      do j = 1, model%atom_num
+      curr_conf = matmul(curr_conf, m%rot_mat(i, :, :))
+      curr_trans = sum(curr_conf, 1) / m%atom_num
+      do j = 1, m%atom_num
         curr_conf(j, :) = curr_conf(j, :) - curr_trans + &
           first_trans
       end do
@@ -99,24 +98,24 @@ contains
   ! Procedure to calculate transtormation cost; note that it also
   ! returns Cartesian coordinates of configuration atoms restored from
   ! their internal coordinates
-  subroutine trCost(model, p, cost_val, tr_coords)
-    type(TrModel), intent(in)              :: model
-    integer, intent(in)                    :: p
-    real(kind=8), intent(out)              :: cost_val
-    real(kind=8), intent(out), allocatable :: tr_coords(:,:,:)
+  subroutine trCost(m, p, cost_val, tr_coords)
+    type(TrModel), intent(in) :: m
+    integer, intent(in)       :: p
+    real(kind=8), intent(out) :: cost_val
+    real(kind=8), intent(out) :: tr_coords(m%conf_num, m%atom_num, 3)
 
-    integer                                                 :: i
-    real(kind=8), dimension(model%atom_num, model%conf_num) :: distances
+    integer                                         :: i
+    real(kind=8), dimension(m%atom_num, m%conf_num) :: distances
     
-    call trRestoreCoords(model, tr_coords)
+    call trRestoreCoords(m, tr_coords)
       
     cost_val = 0
-    do i = 2, model%conf_num
+    do i = 2, m%conf_num
       distances(:, i) = sqrt(sum((tr_coords(i, :, :) - &
         tr_coords(i - 1, :, :)) ** 2, 2))
     end do
 
-    cost_val = sum(model%atom_masses * sum(distances ** p, 2))
+    cost_val = sum(m%atom_masses * sum(distances ** p, 2))
   
   return
   end subroutine trCost
