@@ -3,11 +3,11 @@ module prompt
   implicit none
   
   type :: TrModel
-    real(kind=8), allocatable :: r(:,:), alpha(:,:), psi(:,:)
-    real(kind=8), allocatable :: start_coords(:,:)
-    real(kind=8), allocatable :: atom_masses(:)
-    real(kind=8), allocatable :: rot_mat(:,:,:)
-    integer                   :: atom_num, conf_num
+    real(kind=8), pointer :: r(:,:), alpha(:,:), psi(:,:)
+    real(kind=8), pointer :: start_coords(:,:)
+    real(kind=8), pointer :: atom_masses(:)
+    real(kind=8), pointer :: rot_mat(:,:,:)
+    integer               :: atom_num, conf_num
   end type TrModel
 
 contains
