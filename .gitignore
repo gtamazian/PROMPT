@@ -2,4 +2,5 @@ html
 *.mltbx
 *.mex*
 *.o
+*.mod
 .idea/*
