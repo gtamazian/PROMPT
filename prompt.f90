@@ -70,7 +70,7 @@ contains
   subroutine trRestoreCoords(m, coords)
     type(TrModel), intent(in)          :: m
     real(kind=8),  intent(out), target :: &
-        coords(m%conf_num, m%atom_num, 3)
+        coords(m%atom_num, 3, m%conf_num)
 
     integer                            :: i, j
     real(kind=8), dimension(3)         :: curr_trans, first_trans
@@ -80,11 +80,11 @@ contains
     first_trans = sum(m%start_coords, 1) / m%atom_num
 
     do i = 2, m%conf_num
-      curr_conf => coords(i, :, :)
+      curr_conf => coords(:, :, i)
       call restoreCoords(m%r(:, i), m%alpha(:, i), &
         m%psi(:, i), m%conf_num, curr_conf)
       ! apply the rotation and the transformation
-      curr_conf = matmul(curr_conf, m%rot_mat(i, :, :))
+      curr_conf = matmul(curr_conf, m%rot_mat(:, :, i))
       curr_trans = sum(curr_conf, 1) / m%atom_num
       do j = 1, m%atom_num
         curr_conf(j, :) = curr_conf(j, :) - curr_trans + &
@@ -102,7 +102,7 @@ contains
     type(TrModel), intent(in) :: m
     integer, intent(in)       :: p
     real(kind=8), intent(out) :: cost_val
-    real(kind=8), intent(out) :: tr_coords(m%conf_num, m%atom_num, 3)
+    real(kind=8), intent(out) :: tr_coords(m%atom_num, 3, m%conf_num)
 
     integer                                         :: i
     real(kind=8), dimension(m%atom_num, m%conf_num) :: distances
@@ -111,8 +111,8 @@ contains
       
     cost_val = 0
     do i = 2, m%conf_num
-      distances(:, i) = sqrt(sum((tr_coords(i, :, :) - &
-        tr_coords(i - 1, :, :)) ** 2, 2))
+      distances(:, i) = sqrt(sum((tr_coords(:, :, i) - &
+        tr_coords(:, :, i - 1)) ** 2, 2))
     end do
 
     cost_val = sum(m%atom_masses * sum(distances ** p, 2))
