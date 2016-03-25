@@ -7,7 +7,7 @@ module prompt
     real(kind=8), pointer :: start_coords(:,:)
     real(kind=8), pointer :: atom_masses(:)
     real(kind=8), pointer :: rot_mat(:,:,:)
-    integer               :: atom_num, conf_num
+    integer(kind=4)       :: atom_num, conf_num
   end type TrModel
 
 contains
@@ -28,13 +28,13 @@ contains
   ! Procedure to restore Cartesian coordinates from internal ones
   ! for a single configuration
   subroutine restoreCoords(r, alpha, psi, atom_num, coords)
-    real(kind=8), intent(in)  :: r(atom_num - 1)
-    real(kind=8), intent(in)  :: alpha(atom_num -2)
-    real(kind=8), intent(in)  :: psi(atom_num - 3)
-    integer,      intent(in)  :: atom_num
-    real(kind=8), intent(out) :: coords(atom_num, 3)
+    real(kind=8),    intent(in)  :: r(atom_num - 1)
+    real(kind=8),    intent(in)  :: alpha(atom_num -2)
+    real(kind=8),    intent(in)  :: psi(atom_num - 3)
+    integer(kind=4), intent(in)  :: atom_num
+    real(kind=8),    intent(out) :: coords(atom_num, 3)
 
-    integer                       :: i
+    integer(kind=4)               :: i
     real(kind=8), dimension(3)    :: bc, n
     real(kind=8), dimension(3, 3) :: M
 
@@ -72,7 +72,7 @@ contains
     real(kind=8),  intent(out), target :: coords(m%atom_num, 3, &
       m%conf_num)
 
-    integer                    :: i, j
+    integer(kind=4)            :: i, j
     real(kind=8), dimension(3) :: curr_trans, first_trans
     real(kind=8), pointer      :: curr_conf(:,:)
 
@@ -99,12 +99,12 @@ contains
   ! returns Cartesian coordinates of configuration atoms restored from
   ! their internal coordinates
   subroutine trCost(m, p, cost_val, tr_coords)
-    type(TrModel), intent(in)  :: m
-    integer,       intent(in)  :: p
-    real(kind=8),  intent(out) :: cost_val
-    real(kind=8),  intent(out) :: tr_coords(m%atom_num, 3, m%conf_num)
+    type(TrModel),   intent(in)  :: m
+    integer(kind=4), intent(in)  :: p
+    real(kind=8),    intent(out) :: cost_val
+    real(kind=8),    intent(out) :: tr_coords(m%atom_num, 3, m%conf_num)
 
-    integer                                         :: i
+    integer(kind=4)                                 :: i
     real(kind=8), dimension(m%atom_num, m%conf_num) :: distances
     
     call trRestoreCoords(m, tr_coords)
@@ -123,13 +123,13 @@ contains
   ! Procedure implementing the objective function
   subroutine objFunc(m, angle_num, angle_indices, angle_values, p, &
     func_val, grad_vec)
-    type(TrModel), intent(in)                        :: m
-    integer,       intent(in)                        :: angle_num
-    integer,       intent(in),  dimension(angle_num) :: angle_indices
-    real(kind=8),  intent(in),  dimension(angle_num) :: angle_values
-    integer,       intent(in)                        :: p
-    real(kind=8),  intent(out)                       :: func_val
-    real(kind=8),  intent(out), dimension(angle_num) :: grad_vec
+    type(TrModel),   intent(in)                        :: m
+    integer(kind=4), intent(in)                        :: angle_num
+    integer(kind=4), intent(in),  dimension(angle_num) :: angle_indices
+    real(kind=8),    intent(in),  dimension(angle_num) :: angle_values
+    integer(kind=4), intent(in)                        :: p
+    real(kind=8),    intent(out)                       :: func_val
+    real(kind=8),    intent(out), dimension(angle_num) :: grad_vec
 
     type(TrModel) :: temp_m
     real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: coords
