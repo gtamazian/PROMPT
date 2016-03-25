@@ -1,4 +1,5 @@
 html
 *.mltbx
 *.mex*
+*.o
 .idea/*
