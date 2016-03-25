@@ -95,5 +95,37 @@ contains
   return
   end subroutine trRestoreCoords
 
+  ! Procedure to calculate transtormation cost; note that it also
+  ! returns Cartesian coordinates of configuration atoms restored from
+  ! their internal coordinates
+  subroutine trCost(r, alpha, psi, atom_masses, atom_num, conf_num, &
+    rot_mat, start_coords, p, cost_val, tr_coords)
+    real(kind=8), intent(in), allocatable  :: r(:,:)
+    real(kind=8), intent(in), allocatable  :: alpha(:,:)
+    real(kind=8), intent(in), allocatable  :: psi(:,:)
+    real(kind=8), intent(in), allocatable  :: atom_masses(:)
+    integer, intent(in)                    :: atom_num, conf_num, p
+    real(kind=8), intent(in),  allocatable :: rot_mat(:,:,:)
+    real(kind=8), intent(in),  allocatable :: start_coords(:,:) 
+    real(kind=8), intent(out)              :: cost_val
+    real(kind=8), intent(out), allocatable :: tr_coords(:,:,:)
+
+    integer                                     :: i
+    real(kind=8), dimension(atom_num, conf_num) :: distances
+    
+    call trRestoreCoords(r, alpha, psi, atom_num, conf_num, rot_mat, &
+      start_coords, tr_coords)
+      
+    cost_val = 0
+    do i = 2, conf_num
+      distances(:, i) = sqrt(sum((tr_coords(i, :, :) - &
+        tr_coords(i - 1, :, :)) ** 2, 2))
+    end do
+
+    cost_val = sum(atom_masses * sum(distances ** p, 2))
+  
+  return
+  end subroutine trCost
+
 end module prompt
 
