@@ -12,14 +12,14 @@ function result = trmupdaterotations(trmodel)
 % gaik (dot) tamazian (at) gmail (dot) com
 
 prevCoords = trmodel.StartCoords;
-nModels = length(trmodel.U);
+nModels = size(trmodel.r, 2);
 
 for j = 2:nModels
     currCoords = restorecoords(trmodel.r(:,j), trmodel.alpha(:,j), ...
         trmodel.psi(:,j));
     [~, prevCoords, transform] = procrustes(prevCoords, currCoords, ...
         'scaling', false, 'reflection', false);
-    trmodel.U{j} = transform.T;
+    trmodel.U(:,:,j) = transform.T;
 end
 
 result = trmodel;

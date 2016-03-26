@@ -20,7 +20,7 @@ firstConfTranslation = repmat(mean(coords{1}, 1), nAtoms, 1);
 for i = 2:nConf
     coords{i} = restorecoords(trmodel.r(:,i), ...
         trmodel.alpha(:,i), trmodel.psi(:,i));
-    coords{i} = coords{i}*trmodel.U{i};
+    coords{i} = coords{i}*trmodel.U(:,:,i);
     
     % apply the translation
     currTranslation = repmat(mean(coords{i}, 1), nAtoms, 1);
