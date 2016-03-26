@@ -82,7 +82,7 @@ contains
     do i = 2, m%conf_num
       curr_conf => coords(:, :, i)
       call restoreCoords(m%r(:, i), m%alpha(:, i), &
-        m%psi(:, i), m%conf_num, curr_conf)
+        m%psi(:, i), m%atom_num, curr_conf)
       ! apply the rotation and the transformation
       curr_conf = matmul(curr_conf, m%rot_mat(:, :, i))
       curr_trans = sum(curr_conf, 1) / m%atom_num
