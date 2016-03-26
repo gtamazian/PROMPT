@@ -104,19 +104,18 @@ contains
     real(kind=8),    intent(out) :: cost_val
     real(kind=8),    intent(out) :: tr_coords(m%atom_num, 3, m%conf_num)
 
-    integer(kind=4)                                 :: i
-    real(kind=8), dimension(m%atom_num, m%conf_num) :: distances
+    integer(kind=4)                     :: i
+    real(kind=8), dimension(m%atom_num) :: temp_dist
     
     call trRestoreCoords(m, tr_coords)
       
     cost_val = 0
-    do i = 2, m%conf_num
-      distances(:, i) = sqrt(sum((tr_coords(:, :, i) - &
-        tr_coords(:, :, i - 1)) ** 2, 2))
+    do i = 1, m%conf_num - 1
+      temp_dist = sqrt(sum((tr_coords(:, :, i + 1) - &
+        tr_coords(:, :, i)) ** 2, 2))
+      cost_val = cost_val + sum(m%atom_masses * (temp_dist ** p))
     end do
 
-    cost_val = sum(m%atom_masses * sum(distances ** p, 2))
-  
   return
   end subroutine trCost
 

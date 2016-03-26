@@ -24,8 +24,8 @@
       mwPointer      :: fval_ptr, grad_ptr
 
       ! Arguments for computational routines
-      type(TrModel) :: m
-      mwPointer     :: atom_num, conf_num, angle_num
+      type(TrModel)   :: m
+      mwPointer       :: atom_num, conf_num, angle_num
       real(kind=8), allocatable, dimension(:) :: angle_values
       real(kind=8), allocatable, dimension(:) :: angle_indices
       real(kind=8)                            :: func_val
@@ -72,8 +72,7 @@
       ! number of configurations
       atom_num  = mxGetM(mxGetField(model_ptr, 1, 'r')) + 1
       conf_num  = mxGetN(mxGetField(model_ptr, 1, 'r'))
-      angle_num = mxGetM(mxGetField(model_ptr, 1, 'psi')) * 
-     +  mxGetN(mxGetField(model_ptr, 1, 'psi'))
+      angle_num = mxGetM(prhs(2)) * mxGetN(prhs(2)) 
 
       ! Create result arrays
       plhs(1) = mxCreateDoubleMatrix(1, 1, 0.0)
