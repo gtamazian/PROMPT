@@ -18,30 +18,56 @@ if length(PDBStruct1.Model) + length(PDBStruct2.Model) > 2
     error('the specified PDBStruct objects contain more than one model');
 end
 
-% remove non-backbone atoms from the specified PDB structures
-PDBStruct1 = pdbbackbone(PDBStruct1);
-PDBStruct2 = pdbbackbone(PDBStruct2);
+% check atoms in the provided PDB structures
+atomNames1 = {PDBStruct1.Model.Atom.AtomName};
+atomNames2 = {PDBStruct2.Model.Atom.AtomName};
 
-% Get atomic masses of backbone atoms.
+if length(atomNames1) ~= length(atomNames2)
+    error('PROMPT:trmcreate:differentAtomNumbers', ...
+        'Different atom numbers in the provided PDB structures.');
+end
+
+if ~all(strcmp(atomNames1, atomNames2))
+    error('PROMPT:trmcreate:differentAtomNames', ...
+        'Different atom names in the provided PDB structures.');
+end
+
+if all(strcmp(unique(atomNames1), {'CA'}))
+    onlyCA = true;
+elseif all(strcmp(unique(atomNames1), {'C', 'CA', 'N'}))
+    onlyCA = false;
+else
+    error('PROMPT:trmcreate:nonBackboneAtoms', ...
+        'Non-backbone atoms in the provided PDB structures.');
+end
+
+% Get atomic masses of the atoms.
 trmodel = struct('m', atomicmass({PDBStruct1.Model.Atom.element}), ...
     'StartCoords', atomiccoords(PDBStruct1), ...
     'FinishCoords', atomiccoords(PDBStruct2));
 
-% Process side chains atoms - get a vector of their masses and add them to
-% atomic masses of alpha carbons. Also add a mass of one hydrogen atom.
 alphaCarbonAtoms = PDBStruct1.Model.Atom( ...
     ismember({PDBStruct1.Model.Atom.AtomName}, {'CA'}));
-trmodel.m(2:3:end) = trmodel.m(2:3:end) + ...
-    sidechainmass({alphaCarbonAtoms.resName}) + atomicmass({'H'});
 
-% Add masses of hydrogen atoms to nitrogen atoms of the backbone.
-trmodel.m(1:3:end) = trmodel.m(1:3:end) + atomicmass({'H'});
+if onlyCA
+    trmodel.m = trmodel.m + sidechainmass({alphaCarbonAtoms.resName}) + ...
+        2*atomicmass({'H'}) + sum(atomicmass({'N', 'C', 'O'}));
+else
+    % Process side chains atoms - get a vector of their masses and add
+    % them to atomic masses of alpha carbons. Also add a mass of one 
+    % hydrogen atom.
+    trmodel.m(2:3:end) = trmodel.m(2:3:end) + ...
+        sidechainmass({alphaCarbonAtoms.resName}) + atomicmass({'H'});
 
-% Add masses of oxygen atoms to carbon atoms of the backbone.
-trmodel.m(3:3:end) = trmodel.m(3:3:end) + atomicmass({'O'});
+    % Add masses of hydrogen atoms to nitrogen atoms of the backbone.
+    trmodel.m(1:3:end) = trmodel.m(1:3:end) + atomicmass({'H'});
 
-% Add a mass of a hydrogen atom to N-end of the protein.
-trmodel.m(1) = trmodel.m(1) + atomicmass({'H'});
+    % Add masses of oxygen atoms to carbon atoms of the backbone.
+    trmodel.m(3:3:end) = trmodel.m(3:3:end) + atomicmass({'O'});
+end
+
+% Add a mass of two hydrogen atoms to N-end of the protein.
+trmodel.m(1) = trmodel.m(1) + 2*atomicmass({'H'});
 
 % Add a mass of a hydroxil group to C-end of the protein.
 trmodel.m(end) = trmodel.m(end) + sum(atomicmass({'O', 'H'}));
