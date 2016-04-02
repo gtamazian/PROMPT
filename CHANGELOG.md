@@ -5,7 +5,12 @@ Changes
 -----
 
 - Fortran implementation of the transformation cost objective function
-added.
+added;
+- Option to leave only alpha carbon atoms added to `pdbbackbone`;
+- `trmcreate` creates a alpha carbon-based transformation model if the
+specified PDB structures contains only alpha carbon atoms;
+- `trmplottranglediff` replaced with the `trmplotanglediff` function that
+supports both planar and torsion angles.
 
 1.1
 ---
