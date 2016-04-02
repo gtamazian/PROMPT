@@ -10,7 +10,7 @@ function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf)
 %
 % PROMPT Toolbox for MATLAB
 
-% By Gaik Tamazian, 2014.
+% By Gaik Tamazian, 2014-2016.
 % gaik (dot) tamazian (at) gmail (dot) com
 
 % check if the specified structures contain a single model

@@ -7,7 +7,7 @@ function [h, rmsdValues] = pdbplotadjrmsd(pdbStruct)
 %
 % PROMPT Toolbox for MATLAB
 
-% By Gaik Tamazian, 2014.
+% By Gaik Tamazian, 2014-2016.
 % gaik (dot) tamazian (at) gmail (dot) com
 
 % if a single PDB structure model is specified instead a cell array, then
