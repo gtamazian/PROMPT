@@ -6,6 +6,7 @@ Changes
 
 - Fortran implementation of the transformation cost objective function
 added;
+- `trmobjfunc` supports planar angles as variables for optimization;
 - Function `trmplotminatomdist` to plot minimal interatomic distances; 
 - Option to leave only alpha carbon atoms added to `pdbbackbone`;
 - Option to consider planar angles added to `trmdistantangleindices`;

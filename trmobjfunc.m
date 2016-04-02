@@ -1,26 +1,40 @@
-function [F, G] = trmobjfunc(trmodel, angleIndices, angles)
+function [F, G] = trmobjfunc(trmodel, planarIndices, torsionIndices, ...
+    angles)
 %TRMOBJFUNC Calculate the cost function and its gradient for the model
-%   TRMOBJFUNC(trmodel,indices,angles) returns the cost of the specified
-%   transformation trmodel for the values of torsion angles specified in
-%   the vector angles. The angles are also defined by their indices in the
-%   given vector angleIndices.
+%   TRMOBJFUNC(trmodel,planarIndices,torsionIndices,angles) returns the 
+%   cost of the specified transformation trmodel for the values of torsion
+%   angles specified in the vector angles. The angles are also defined by 
+%   their indices in the vector arguments planarIndices and torsionIndices.
 %
 %   See also trmcost
 %
 % PROMPT Toolbox for MATLAB
 
-% By Gaik Tamazian, 2014.
+% By Gaik Tamazian, 2014-2016.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-trmodel.psi(angleIndices,2:end-1) = ...
-    reshape(angles, length(angleIndices), size(trmodel.psi, 2) - 2);
+nConf = size(trmodel.r, 2);
+nPlanar = length(planarIndices);
+nTorsion = length(torsionIndices);
 
-[F, X] = trmcost(trmodel);
-
-if nargout > 1
-    G = g(trmodel, X);
-    G = G(angleIndices, 2:end-1);
+if ~isempty(planarIndices)
+    trmodel.alpha(planarIndices,2:end-1) = ...
+        reshape(angles(1:nPlanar*(nConf - 2)), nPlanar, nConf - 2);
 end
+
+if ~isempty(torsionIndices)
+    trmodel.psi(torsionIndices,2:end-1) = ...
+        reshape(angles(nPlanar*(nConf - 2)+1:end), nTorsion, nConf - 2);
+end
+
+[F, ~] = trmcost(trmodel);
+G = zeros(size(angles));
+
+% Temporary disable the gradient vector calculation.
+% if nargout > 1
+%     G = g(trmodel, X);
+%     G = G(angleIndices, 2:end-1);
+% end
 
 end
 
