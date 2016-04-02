@@ -12,7 +12,7 @@ function h = trmplotanglediff(trmodel, angleType, sortAngles, ...
 %   denotes which angles are considered: planar or torsion. By default,
 %   torsion angles are considered.
 %
-%   See also trmplotadjrmsd trmplotfixedrmsd
+%   See also trmplotadjrmsd trmplotfixedrmsd trmplotminatomdist
 %
 % PROMPT Toolbox for MATLAB
 

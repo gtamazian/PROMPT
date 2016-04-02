@@ -3,7 +3,7 @@ function h = trmplotadjrmsd(trmodels)
 %   TRMPLOTADJRMSD(trmodels) plots RMSDs between adjacent configurations of
 %   transformation models specified in a cell array trmodels.
 %
-%   See also trmplotfixedrmsd trmplottranglediff
+%   See also trmplotfixedrmsd trmplottranglediff trmplotminatomdist
 %
 % PROMPT Toolbox for MATLAB
 

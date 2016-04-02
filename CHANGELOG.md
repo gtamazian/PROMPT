@@ -6,6 +6,7 @@ Changes
 
 - Fortran implementation of the transformation cost objective function
 added;
+- Function `trmplotminatomdist` to plot minimal interatomic distances; 
 - Option to leave only alpha carbon atoms added to `pdbbackbone`;
 - `trmcreate` creates a alpha carbon-based transformation model if the
 specified PDB structures contains only alpha carbon atoms;

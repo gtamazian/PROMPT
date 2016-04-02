@@ -4,7 +4,7 @@ function h = trmplotfixedrmsd(trmodels, confNo)
 %   configurations of transformations specified in the cell array trmodels 
 %   and the configuration with the specified number confNo.
 %
-%   See also trmplotadjrmsd trmplottranglediff
+%   See also trmplotadjrmsd trmplottranglediff trmplotminatomdist
 %
 % PROMPT Toolbox for MATLAB
 
