@@ -1,3 +1,8 @@
+! PROMPT Toolbox for MATLAB
+!
+! By Gaik Tamazian, 2016.
+! gaik (dot) tamazian (at) gmail (dot) com
+
 module prompt
 
   implicit none
@@ -120,29 +125,47 @@ contains
   end subroutine trCost
 
   ! Procedure implementing the objective function
-  subroutine objFunc(m, angle_num, angle_indices, angle_values, p, &
-    func_val, grad_vec)
-    type(TrModel),   intent(in)                        :: m
-    integer(kind=4), intent(in)                        :: angle_num
-    integer(kind=4), intent(in),  dimension(angle_num) :: angle_indices
+  subroutine objFunc(m, p_num, p_indices, t_num, t_indices, &
+    angle_values, p, func_val, grad_vec)
+    type(TrModel),   intent(in)                     :: m
+    integer(kind=4), intent(in)                     :: p_num
+    integer(kind=4), intent(in), dimension(p_num)   :: p_indices
+    integer(kind=4), intent(in)                     :: t_num
+    integer(kind=4), intent(in), dimension(t_num)   :: t_indices
     real(kind=8),    intent(in),  &
-      dimension(angle_num * (m%conf_num - 2))          :: angle_values
-    integer(kind=4), intent(in)                        :: p
-    real(kind=8),    intent(out)                       :: func_val
-    real(kind=8),    intent(out), dimension(angle_num) :: grad_vec
+      dimension((p_num + t_num) * (m%conf_num - 2)) :: angle_values
+    integer(kind=4), intent(in)                     :: p
+    real(kind=8),    intent(out)                    :: func_val
+    real(kind=8),    intent(out), &
+      dimension(p_num + t_num)                      :: grad_vec
 
     type(TrModel) :: temp_m
     integer       :: i
     real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: coords
-    real(kind=8), dimension(angle_num, m%conf_num - 2) :: temp_angles
+    real(kind=8), dimension(p_num, m%conf_num - 2)     :: temp_p_angles
+    real(kind=8), dimension(t_num, m%conf_num - 2)     :: temp_t_angles
 
-    temp_angles = reshape(angle_values, [angle_num, m%conf_num - 2])
-    
     temp_m = m
-    do i = 1, angle_num
-      temp_m%psi(angle_indices(i), 2:(m%conf_num - 1)) = &
-        temp_angles(i, :)
-    end do
+
+    if (p_num > 0) then
+      temp_p_angles = reshape( &
+        angle_values(:p_num * (m%conf_num - 2)), &
+        [p_num, m%conf_num - 2])
+      do i = 1, p_num
+        temp_m%alpha(p_indices(i), 2:(m%conf_num - 1)) = &
+          temp_p_angles(i, :)
+      end do
+    end if
+
+    if (t_num > 0) then
+      temp_t_angles = reshape( &
+        angle_values(p_num * (m%conf_num - 2) + 1:), &
+        [t_num, m%conf_num - 2])
+      do i = 1, t_num
+        temp_m%psi(t_indices(i), 2:(m%conf_num - 1)) = &
+          temp_t_angles(i, :)
+      end do
+    end if
 
     call trCost(temp_m, p, func_val, coords)
 
