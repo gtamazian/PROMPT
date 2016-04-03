@@ -13,19 +13,7 @@ function [F, G] = trmobjfunc(trmodel, planarIndices, torsionIndices, ...
 % By Gaik Tamazian, 2014-2016.
 % gaik (dot) tamazian (at) gmail (dot) com
 
-nConf = size(trmodel.r, 2);
-nPlanar = length(planarIndices);
-nTorsion = length(torsionIndices);
-
-if ~isempty(planarIndices)
-    trmodel.alpha(planarIndices,2:end-1) = ...
-        reshape(angles(1:nPlanar*(nConf - 2)), nPlanar, nConf - 2);
-end
-
-if ~isempty(torsionIndices)
-    trmodel.psi(torsionIndices,2:end-1) = ...
-        reshape(angles(nPlanar*(nConf - 2)+1:end), nTorsion, nConf - 2);
-end
+trmodel = trmchangeangles(trmodel, planarIndices, torsionIndices, angles);
 
 [F, ~] = trmcost(trmodel);
 G = zeros(size(angles));
