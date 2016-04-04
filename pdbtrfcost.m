@@ -15,36 +15,47 @@ function cost = pdbtrfcost(PDBStruct)
 p = 2;
 nModels = length(PDBStruct.Model);
 
-% check that the specified structure contains only backbone atoms
-for iModel = 1:nModels
-    if ~isempty(...
-            setdiff(unique({PDBStruct.Model(iModel).Atom.AtomName}), ...
-            {'N', 'CA', 'C'}))
-        error(['the specified PDBStruct object contains models ', ...
-            'with non-backbone atoms']);
-    end
+% check atoms in the provided PDB structures
+atomNames = {PDBStruct.Model(1).Atom.AtomName};
+
+if all(strcmp(unique(atomNames), {'CA'}))
+    onlyCA = true;
+elseif all(strcmp(unique(atomNames), {'C', 'CA', 'N'}))
+    onlyCA = false;
+else
+    error('PROMPT:trmcreate:nonBackboneAtoms', ...
+        'Non-backbone atoms in the provided PDB structures.');
 end
 
 atomicMasses = atomicmass({PDBStruct.Model(1).Atom.element});
 
 % add masses of side chains and masses of one hydrogen atoms to alpha
 % carbons
-alphacarbonatoms = PDBStruct.Model(1).Atom( ...
+alphaCarbonAtoms = PDBStruct.Model(1).Atom( ...
     ismember({PDBStruct.Model(1).Atom.AtomName}, {'CA'}));
-atomicMasses(2:3:end) = atomicMasses(2:3:end) + ...
-    sidechainmass({alphacarbonatoms.resName}) + ...
-    atomicmass({'H'});
 
-% add masses of hydrogen atoms to nitrogen atoms of the backbone
-atomicMasses(1:3:end) = atomicMasses(1:3:end) + atomicmass({'H'});
+if onlyCA
+    atomicMasses = atomicMasses + ...
+        sidechainmass({alphaCarbonAtoms.resName}) + ...
+        2*atomicmass({'H'}) + sum(atomicmass({'N', 'C', 'O'}));
+else
+    % Process side chains atoms - get a vector of their masses and add
+    % them to atomic masses of alpha carbons. Also add a mass of one 
+    % hydrogen atom.
+    atomicMasses(2:3:end) = atomicMasses(2:3:end) + ...
+        sidechainmass({alphaCarbonAtoms.resName}) + atomicmass({'H'});
 
-% add masses of oxygen atoms to carbon atoms of the backbone
-atomicMasses(3:3:end) = atomicMasses(3:3:end) + atomicmass({'O'});
+    % Add masses of hydrogen atoms to nitrogen atoms of the backbone.
+    atomicMasses(1:3:end) = atomicMasses(1:3:end) + atomicmass({'H'});
 
-% add a mass of a single hydrogen atom to the N-end of the protein
-atomicMasses(1) = atomicMasses(1) + atomicmass({'H'});
+    % Add masses of oxygen atoms to carbon atoms of the backbone.
+    atomicMasses(3:3:end) = atomicMasses(3:3:end) + atomicmass({'O'});
+end
 
-% add a mass of a hydroxil group to the C-end of the protein
+% Add a mass of two hydrogen atoms to N-end of the protein.
+atomicMasses(1) = atomicMasses(1) + 2*atomicmass({'H'});
+
+% Add a mass of a hydroxil group to C-end of the protein.
 atomicMasses(end) = atomicMasses(end) + sum(atomicmass({'O', 'H'}));
 
 % calculate distances between atoms of adjacent models
