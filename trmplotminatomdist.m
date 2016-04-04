@@ -3,7 +3,7 @@ function h = trmplotminatomdist(trmodels)
 %   TRMPLOTMINATOMDIST(trmodels) plots minimal interatomic distances
 %   within configurations of the specified transformations.
 %
-%   See also trmplotadjrmsd trmplotfixedrmsd trmplottranglediff
+%   See also trmplotadjrmsd trmplotfixedrmsd pdbplotminatomdist
 %
 % PROMPT Toolbox for MATLAB
 
