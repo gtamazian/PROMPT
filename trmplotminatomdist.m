@@ -25,6 +25,8 @@ for i = 1:nTrans
 end
 
 markers = {'s', 'o', '^', '+', 'x', 'd', 'v', '*', 'p', 'h'};
+markers = repmat(markers, ceil(nTrans / length(markers)));
+markers = markers(:);
 for i = 1:size(minDistValues, 1)
     h = plot(minDistValues(i,:), ['-', markers{i}]);
     hold on
