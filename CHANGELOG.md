@@ -10,6 +10,8 @@ added;
 - Functions `trmplotminatomdist` and `pdbplotminatomdist` to plot minimal interatomic 
 distances; 
 - Function `trmchangeangles` for convenient angle change in a model;
+- Function `trminteroptim` implementing a multistage optimization
+procedure;
 - Option to leave only alpha carbon atoms added to `pdbbackbone`;
 - Option to consider planar angles added to `trmdistantangleindices`;
 - `trmcreate` creates an alpha carbon-based transformation model if the
