@@ -16,16 +16,11 @@ function [cost, X] = trmcost(trmodel)
 p = 2;
 
 coords = trmrestorecoords(trmodel);
-nModels = size(coords, 3);
-nAtoms = size(coords(:,:,1), 1);
 
 % calculate distances
-distances = zeros(nAtoms, nModels);
-for i = 2:nModels
-   distances(:,i) = sqrt(sum((coords(:,:,i) - coords(:,:,i-1)).^2, 2));
-end
+distances = sqrt(sum((coords(:,:,2:end) - coords(:,:,1:end-1)).^2, 2));
 
-cost = sum(trmodel.m .* sum(distances.^p, 2));
+cost = sum(trmodel.m .* sum(distances.^p, 3));
 X = coords;
 
 end
