@@ -15,8 +15,8 @@ function minDist = trmmininteratomicdist(trmodel)
 coords = trmrestorecoords(trmodel);
 minDist = length(coords);
 
-for i = 1:length(coords)
-	minDist(i) = min(pdist(coords{i}));
+for i = 1:size(coords, 3)
+	minDist(i) = min(pdist(coords(:,:,i)));
 end
 
 end

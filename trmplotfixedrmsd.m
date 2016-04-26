@@ -25,10 +25,10 @@ for i = 1:nTrans
     coords = trmrestorecoords(trmodels{i});
     for j = 1:nConf
         % superpose the current configuration to the specified one
-        [~, coords{j}] = procrustes(coords{confNo}, coords{j}, ...
+        [~, coords(:,:,j)] = procrustes(coords(:,:,confNo), coords(:,:,j), ...
             'scaling', false, 'reflection', false);
-        rmsdValues(i,j) = mean(sqrt(sum((coords{j} - ...
-            coords{confNo}).^2,2)));
+        rmsdValues(i,j) = mean(sqrt(sum((coords(:,:,j) - ...
+            coords(:,:,confNo)).^2,2)));
     end
 end
 

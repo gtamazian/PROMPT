@@ -15,14 +15,14 @@ function PDBStruct = trm2pdb(trmodel, initialPDBStruct)
 PDBStruct = initialPDBStruct;
 PDBStruct.Model = PDBStruct.Model(1);
 nModels = size(trmodel.psi, 2);
-coordscell = trmrestorecoords(trmodel);
+coords = trmrestorecoords(trmodel);
 
 for i = 1:nModels
     PDBStruct.Model(i) = initialPDBStruct.Model(1);
-    for j = 1:size(coordscell{i}(:,1), 1)
-        PDBStruct.Model(i).Atom(j).X = coordscell{i}(j,1);
-        PDBStruct.Model(i).Atom(j).Y = coordscell{i}(j,2);
-        PDBStruct.Model(i).Atom(j).Z = coordscell{i}(j,3);
+    for j = 1:size(coords(:,1,i), 1)
+        PDBStruct.Model(i).Atom(j).X = coords(j,1,i);
+        PDBStruct.Model(i).Atom(j).Y = coords(j,2,i);
+        PDBStruct.Model(i).Atom(j).Z = coords(j,3,i);
     end
 end
 
