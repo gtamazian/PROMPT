@@ -18,7 +18,9 @@ procedure;
 specified PDB structures contains only alpha carbon atoms;
 - `pdbcost` supports PDB files containing alpha carbon-based structures;
 - `trmplottranglediff` replaced with the `trmplotanglediff` function that
-supports both planar and torsion angles.
+supports both planar and torsion angles;
+- Cell arrays of configuration coordinates were replaced with 3D-arrays
+for better performance.
 
 1.1
 ---

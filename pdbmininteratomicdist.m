@@ -13,11 +13,11 @@ function minDist = pdbmininteratomicdist(PDBStruct)
 % gaik (dot) tamazian (at) gmail (dot) com
 
 coords = pdbextractcoords(PDBStruct);
-nModels = length(coords);
+nModels = size(coords, 3);
 minDist = nan(nModels, 1);
 
 for iModel = 1:nModels
-	minDist(iModel) = min(pdist(coords{iModel}));
+	minDist(iModel) = min(pdist(coords(:,:,iModel)));
 end
 
 end

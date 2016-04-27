@@ -13,10 +13,11 @@ function coords = pdbextractcoords(PDBStruct)
 % gaik (dot) tamazian (at) gmail (dot) com
 
 nModels = length(PDBStruct.Model);
-coords = cell(1, nModels);
+nAtoms = size(PDBStruct.Model(1).Atom, 2);
+coords = zeros(nAtoms, 3, nModels);
 
 for iModel = 1:nModels
-    coords{iModel} = [[PDBStruct.Model(iModel).Atom.X]' ...
+    coords(:,:,iModel) = [[PDBStruct.Model(iModel).Atom.X]' ...
         [PDBStruct.Model(iModel).Atom.Y]' ...
         [PDBStruct.Model(iModel).Atom.Z]'];
 end

@@ -26,7 +26,7 @@ coords2 = pdbextractcoords(PDBStruct2);
 [r1, alpha1, psi1] = createmodel(PDBStruct1);
 [r2, alpha2, psi2] = createmodel(PDBStruct2);
 
-nModels = length(coords1); % the number of configurations
+nModels = size(coords1, 3); % the number of configurations
 
 % get differences and RMSDs between configuration atom coordinates
 normDiff = zeros(nModels, 1);
@@ -35,11 +35,11 @@ rDiff = zeros(nModels, 1);
 alphaDiff = zeros(nModels, 1);
 psiDiff = zeros(nModels, 1);
 for iModel = 1:nModels
-    normDiff(iModel) = norm(coords1{iModel} - coords2{iModel});
+    normDiff(iModel) = norm(coords1(:,:,iModel) - coords2(:,:,iModel));
     % superpose coords2{iModel} to coords1{iModel}
-    [~, superposedCoords] = procrustes(coords1{iModel}, ...
-        coords2{iModel}, 'scaling', false, 'reflection', false);
-    rmsd(iModel) = mean(sqrt(sum((coords1{iModel} - ...
+    [~, superposedCoords] = procrustes(coords1(:,:,iModel), ...
+        coords2(:,:,iModel), 'scaling', false, 'reflection', false);
+    rmsd(iModel) = mean(sqrt(sum((coords1(:,:,iModel) - ...
         superposedCoords).^2, 2)));
     rDiff(iModel) = norm(r1 - r2);
     alphaDiff(iModel) = norm(circdist(alpha1, alpha2));

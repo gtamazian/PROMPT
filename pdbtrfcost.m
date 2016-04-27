@@ -60,11 +60,11 @@ atomicMasses(end) = atomicMasses(end) + sum(atomicmass({'O', 'H'}));
 
 % calculate distances between atoms of adjacent models
 coords = pdbextractcoords(PDBStruct);
-nAtoms = size(coords{1}, 1);
+nAtoms = size(coords, 1);
 atomicDist = zeros(nAtoms, nModels);    
 for iModel = 2:nModels
-    atomicDist(:,iModel) = sqrt(sum((coords{iModel} - ...
-        coords{iModel-1}).^2, 2));
+    atomicDist(:,iModel) = sqrt(sum((coords(:,:,iModel) - ...
+        coords(:,:,iModel-1)).^2, 2));
 end
     
 cost = sum(atomicMasses .* sum(atomicDist.^p, 2));

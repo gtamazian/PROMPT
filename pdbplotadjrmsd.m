@@ -24,10 +24,10 @@ for i = 1:nTrans
     coords = pdbextractcoords(pdbStruct{i});
     for j = 2:nModels
         % superpose the current model to the previous one
-        [~, coords{j}] = procrustes(coords{j-1}, coords{j}, ...
+        [~, coords(:,:,j)] = procrustes(coords(:,:,j-1), coords(:,:,j), ...
             'scaling', false, 'reflection', false);
-        rmsdValues(i,j-1) = mean(sqrt(sum((coords{j} - ...
-            coords{j-1}).^2,2)));
+        rmsdValues(i,j-1) = mean(sqrt(sum((coords(:,:,j) - ...
+            coords(:,:,j-1)).^2,2)));
     end
 end
 
