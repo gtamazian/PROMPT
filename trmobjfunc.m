@@ -15,18 +15,18 @@ function [F, G] = trmobjfunc(trmodel, planarIndices, torsionIndices, ...
 
 trmodel = trmchangeangles(trmodel, planarIndices, torsionIndices, angles);
 
-[F, xTrans] = trmcost(trmodel);
+[F, xTrans, xConf] = trmcost(trmodel);
 
 if nargout > 1
-    G = g(trmodel, planarIndices, torsionIndices, xTrans);
+    G = g(trmodel, planarIndices, torsionIndices, xTrans, xConf);
 end
 
 end
 
-function G = g(model, planarIndices, torsionIndices, xTrans)
+function G = g(model, planarIndices, torsionIndices, xTrans, xConf)
 %G Calculate the transformation cost gradient vector.
-%   g(model, planarIndices, torsionIndices, X) returns the gradient vector
-%   of the transformation.
+%   g(model, planarIndices, torsionIndices, xTrans, xConf) returns the 
+%   gradient vector of the transformation.
 %
 % PROMPT Toolbox for MATLAB
 
@@ -40,11 +40,10 @@ G = zeros(length(planarIndices) + length(torsionIndices), nConf-2);
 vS = s(xTrans);
 
 for j = 2:nConf-1
-    xConf = restorecoords(model.r(:,j), model.alpha(:,j), model.psi(:,j));
-    vR = r(xConf);
+    vR = r(xConf(:,:,j));
     vN = n(vR);
     vP = p(vR);
-    vQ = q(xConf);
+    vQ = q(xConf(:,:,j));
     
     maskP = reshape(repelem(tril(ones(nAtoms, nAtoms-1), -2), 1, 3), ...
         [nAtoms, 3, nAtoms-1]);
