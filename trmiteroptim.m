@@ -30,10 +30,7 @@ for iStep = 1:nSteps
     f = @(x) trmobjfunc(trmodel, P, T, x);
     
     % get the initial point
-    initial_point_P = trmodel.alpha(P, 2:end-1);
-    initial_point_T = trmodel.psi(T, 2:end-1);
-    initial_point = [initial_point_P(:); initial_point_T(:)];
-    initial_point = reduceangles(initial_point);
+    initial_point = trminitialpoint(trmodel, P, T);
     
     [x,~,~,output] = fmincon(f, initial_point, [], [], [], [], ...
         -pi*ones(size(initial_point)), pi*ones(size(initial_point)), ...
