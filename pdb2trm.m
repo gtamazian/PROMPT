@@ -11,7 +11,7 @@ function trmodel = pdb2trm(PDBStruct)
 % gaik (dot) tamazian (at) gmail (dot) com
 
 coords = pdbextractcoords(PDBStruct);
-nModels = size(coords,2);
+nModels = size(coords,3);
 
 struct1 = PDBStruct; struct1.Model = struct1.Model(1);
 struct2 = PDBStruct; struct2.Model = struct2.Model(end);
