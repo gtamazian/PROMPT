@@ -38,11 +38,11 @@ nConf = size(xTrans, 3);
 G = zeros(length(planarIndices) + length(torsionIndices), nConf-2);
 
 vS = s(xTrans);
-
+vR = r(xConf);
+vN = n(vR);
+vP = p(vR);
+    
 for j = 2:nConf-1
-    vR = r(xConf(:,:,j));
-    vN = n(vR);
-    vP = p(vR);
     vQ = q(xConf(:,:,j));
     
     maskP = reshape(repelem(tril(ones(nAtoms, nAtoms-1), -2), 1, 3), ...
@@ -56,7 +56,7 @@ for j = 2:nConf-1
     for angleNumber = 1:length(planarIndices)
         i = planarIndices(angleNumber);
         G(angleNumber,j-1) = 2 * sum(model.m .* dot(vS(:,:,j), ...
-            cross(repmat(vP(i,:), nAtoms, 1), vQP(:,:,i) - ...
+            cross(repmat(vP(i,:,j), nAtoms, 1), vQP(:,:,i) - ...
             repmat(mean(vQP(:,:,i)), [nAtoms, 1])) * model.U(:,:,j), 2));
     end
     
@@ -64,7 +64,7 @@ for j = 2:nConf-1
         i = torsionIndices(angleNumber);
         G(length(planarIndices) + angleNumber,j-1) =  ...
             2 * sum(model.m .* dot(vS(:,:,j), ...
-            cross(repmat(vN(i,:), nAtoms, 1), vQT(:,:,i) - ...
+            cross(repmat(vN(i,:,j), nAtoms, 1), vQT(:,:,i) - ...
             repmat(mean(vQT(:,:,i)), [nAtoms, 1])) * model.U(:,:,j), 2));
     end
 end
