@@ -41,15 +41,15 @@ vS = s(xTrans);
 vR = r(xConf);
 vN = n(vR);
 vP = p(vR);
+
+maskP = reshape(repelem(tril(ones(nAtoms, nAtoms-1), -2), 1, 3), ...
+    [nAtoms, 3, nAtoms-1]);
+maskT = reshape(repelem(tril(ones(nAtoms, nAtoms-1), -3), 1, 3), ...
+    [nAtoms, 3, nAtoms-1]);
     
 for j = 2:nConf-1
     vQ = q(xConf(:,:,j));
-    
-    maskP = reshape(repelem(tril(ones(nAtoms, nAtoms-1), -2), 1, 3), ...
-        [nAtoms, 3, nAtoms-1]);
-    maskT = reshape(repelem(tril(ones(nAtoms, nAtoms-1), -3), 1, 3), ...
-        [nAtoms, 3, nAtoms-1]);
-    
+        
     vQP = vQ .* maskP;
     vQT = vQ .* maskT;
     
@@ -102,9 +102,9 @@ end
 function output = q(x)
 
     nAtoms = size(x, 1);
-    output = (repmat(x, [1, 1, nAtoms-1]) - ...
+    output = repmat(x, [1, 1, nAtoms-1]) - ...
         permute(reshape(repelem(x(2:end,:), nAtoms, 1), ...
-        [nAtoms, nAtoms-1, 3]), [1, 3, 2]));
+        [nAtoms, nAtoms-1, 3]), [1, 3, 2]);
     
 end
 
