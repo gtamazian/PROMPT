@@ -227,8 +227,7 @@ contains
     real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: vS
     real(kind=8), dimension(m%atom_num - 1, 3, m%conf_num) :: vR
     real(kind=8), dimension(m%atom_num - 2, 3, m%conf_num) :: vN, vP
-    real(kind=8), dimension(m%atom_num, 3, m%atom_num - 1) :: vQ, &
-      maskP, maskT, vQP, vQT
+    real(kind=8), dimension(m%atom_num, 3, m%atom_num - 1) :: vQP, vQT
     real(kind=8), dimension(m%atom_num, 3) :: mean_vQP, mean_vQT, v
     real(kind=8), dimension(p_num + t_num, m%conf_num - 2) :: temp_g
 
@@ -237,14 +236,10 @@ contains
     vR = r(conf_coords, m%atom_num, m%conf_num)
     vN = n(vR, m%atom_num, m%conf_num)
     vP = p(vR, m%atom_num, m%conf_num)
-    maskP = mask_p(m%atom_num)
-    maskT = mask_t(m%atom_num)
 
     do j = 2, m%conf_num - 1
-      vQ = q(conf_coords(:, :, j), m%atom_num)
-
-      vQP = vQ * maskP
-      vQT = vQ * maskT
+      vQP = q(conf_coords(:, :, j), m%atom_num, 2)
+      vQT = q(conf_coords(:, :, j), m%atom_num, 3)
 
       do angle_num = 1, p_num
         i = p_indices(angle_num)
@@ -320,45 +315,19 @@ contains
 
   end function s
 
-  pure function mask_p(atom_num)
-    integer(kind=4), intent(in) :: atom_num
-    real(kind=8), dimension(atom_num, 3, atom_num - 1) :: mask_p 
-    
-    integer(kind=4) :: l, i
-
-    mask_p = 0
-    do i = 1, atom_num - 1
-      do l = i + 2, atom_num 
-        mask_p(l, :, i) = 1
-      end do
-    end do
-
-  end function mask_p
-
-  pure function mask_t(atom_num)
-    integer(kind=4), intent(in) :: atom_num
-    real(kind=8), dimension(atom_num, 3, atom_num - 1) :: mask_t 
-    
-    integer(kind=4) :: l, i
-
-    mask_t = 0
-    do i = 1, atom_num - 1
-      do l = i + 3, atom_num
-        mask_t(l, :, i) = 1
-      end do
-    end do
-
-  end function mask_t
-
-
-  pure function q(conf_x, atom_num)
-    integer(kind=4), intent(in) :: atom_num
+  pure function q(conf_x, atom_num, shift)
+    integer(kind=4), intent(in) :: atom_num, shift
     real(kind=8), dimension(atom_num, 3), intent(in)   :: conf_x
     real(kind=8), dimension(atom_num, 3, atom_num - 1) :: q
     
-    q = spread(conf_x, 3, atom_num - 1) - &
-      reshape(spread(conf_x(2:, :), 1, atom_num), &
-      [atom_num, 3, atom_num - 1], ORDER=[1, 3, 2])
+    integer(kind=4) :: l, i
+    
+    q = 0
+    do i = 1, atom_num - 1
+      do l = i + shift,  atom_num 
+        q(l, :, i) = conf_x(l, :) - conf_x(i + 1, :)
+      end do
+    end do
 
   end function q
 
