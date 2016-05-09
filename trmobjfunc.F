@@ -90,7 +90,8 @@
 
       ! Create result arrays
       plhs(1) = mxCreateDoubleMatrix(1, 1, 0.0)
-      plhs(2) = mxCreateDoubleMatrix(p_num + t_num, 1, 0.0)
+      plhs(2) = mxCreateDoubleMatrix((p_num + t_num) * 
+     +  (conf_num - 2), 1, 0.0)
 
       ! Get pointers to output data
       fval_ptr = mxGetPr(plhs(1))
@@ -106,7 +107,7 @@
       allocate(p_indices(p_num))
       allocate(angle_values((p_num + t_num) * (conf_num - 2)))
       allocate(t_indices(t_num))
-      allocate(grad_vec(p_num + t_num))
+      allocate(grad_vec((p_num + t_num) * (conf_num - 2)))
 
       m%conf_num = int(conf_num, 4)
       m%atom_num = int(atom_num, 4)
@@ -129,11 +130,12 @@
       ! Launch the computational routines
       call objFunc(m, int(p_num, 4), int(p_indices, 4),
      +  int(t_num, 4), int(t_indices, 4),
-     +  angle_values, 2, func_val, grad_vec)
+     +  angle_values, 2, nlhs > 1, func_val, grad_vec)
 
       ! Copy the output data back to MATLAB data structures
       call mxCopyReal8ToPtr(func_val, fval_ptr, 1)
-      call mxCopyReal8ToPtr(grad_vec, grad_ptr, p_num + t_num)
+      call mxCopyReal8ToPtr(grad_vec, grad_ptr, (p_num + t_num) *
+     +  (conf_num - 2))
 
       ! Deallocate Fortran arrays
       deallocate(m%atom_masses)
