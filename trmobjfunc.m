@@ -69,6 +69,8 @@ for j = 2:nConf-1
     end
 end
 
+G = G(:);
+
 end
 
 function output = s(x)
