@@ -18,49 +18,50 @@ module prompt
 contains
   
   ! Procedure implementing the cross product of a pair of vectors
-  function cross3d(a, b)
-    real(kind=8), dimension(3) :: a, b
-    real(kind=8), dimension(3) :: cross3d
+  pure function cross3d(a, b) result(c)
+    real(kind=8), intent(in) :: a(3), b(3)
+    real(kind=8) :: c(3)
 
-    cross3d(1) = a(2)*b(3) - a(3)*b(2)
-    cross3d(2) = a(3)*b(1) - a(1)*b(3)
-    cross3d(3) = a(1)*b(2) - a(2)*b(1)
+    c(1) = a(2)*b(3) - a(3)*b(2)
+    c(2) = a(3)*b(1) - a(1)*b(3)
+    c(3) = a(1)*b(2) - a(2)*b(1)
 
   end function cross3d
 
-  function cross(a, b, n)
-    integer(kind=4)               :: n
-    real(kind=8), dimension(n, 3) :: a, b, cross
+  pure function cross(a, b, n) result(c)
+    integer(kind=4), intent(in)               :: n
+    real(kind=8), dimension(n, 3), intent(in) :: a, b
+    real(kind=8), dimension(n, 3) :: c
 
     integer(kind=4) :: i
 
     do i = 1, n
-      cross(i, :) = cross3d(a(i, :), b(i, :))
+      c(i, :) = cross3d(a(i, :), b(i, :))
     end do
 
   end function cross
 
-  function dot(a, b, n)
-    integer(kind=4) :: n
-    real(kind=8), dimension(n, 3) :: a, b
-    real(kind=8), dimension(n) :: dot
+  pure function dot(a, b, n) result(c)
+    integer(kind=4), intent(in) :: n
+    real(kind=8), dimension(n, 3), intent(in) :: a, b
+    real(kind=8), dimension(n) :: c
 
     integer(kind=4) :: i
 
     do i = 1, n
-      dot(i) = dot_product(a(i, :), b(i, :))
+      c(i) = dot_product(a(i, :), b(i, :))
     end do
 
   end function dot
  
   ! Procedure to restore Cartesian coordinates from internal ones
   ! for a single configuration
-  subroutine restoreCoords(r, alpha, psi, atom_num, coords)
+  pure function restoreCoords(r, alpha, psi, atom_num) result(coords)
     integer(kind=4), intent(in)  :: atom_num
     real(kind=8),    intent(in)  :: r(atom_num - 1)
     real(kind=8),    intent(in)  :: alpha(atom_num -2)
     real(kind=8),    intent(in)  :: psi(atom_num - 3)
-    real(kind=8),    intent(out) :: coords(atom_num, 3)
+    real(kind=8)                 :: coords(atom_num, 3)
 
     integer(kind=4)               :: i
     real(kind=8), dimension(3)    :: bc, n
@@ -91,7 +92,7 @@ contains
     end do
   
   return
-  end subroutine restoreCoords
+  end function restoreCoords
 
   ! Procedure to restore Cartesian coordinates for all
   ! configurations of a transformation.
@@ -111,8 +112,8 @@ contains
 
     do i = 2, m%conf_num
       curr_conf => coords(:, :, i)
-      call restoreCoords(m%r(:, i), m%alpha(:, i), &
-        m%psi(:, i), m%atom_num, curr_conf)
+      curr_conf =  restoreCoords(m%r(:, i), m%alpha(:, i), &
+        m%psi(:, i), m%atom_num)
       conf_coords(:, :, i) = coords(:, :, i)
       ! apply the rotation and the transformation
       curr_conf = matmul(curr_conf, m%rot_mat(:, :, i))
@@ -210,15 +211,17 @@ contains
   end subroutine objFunc
 
   ! The gradient of the transformation cost objective function
-  function g(m, p_num, p_indices, t_num, t_indices, coords, &
+  pure function g(m, p_num, p_indices, t_num, t_indices, coords, &
     conf_coords)
-    type(TrModel)                       :: m
-    integer(kind=4)                     :: p_num, t_num
-    integer(kind=4), dimension(p_num)   :: p_indices
-    integer(kind=4), dimension(t_num)   :: t_indices
-    real(kind=8),    dimension(m%atom_num, 3, m%conf_num) :: coords
-    real(kind=8),    dimension(m%atom_num, 3, m%conf_num) :: conf_coords
-    real(kind=8),    dimension((p_num + t_num) * (m%conf_num - 2)) :: g
+    type(TrModel), intent(in)   :: m
+    integer(kind=4), intent(in) :: p_num, t_num
+    integer(kind=4), dimension(p_num), intent(in) :: p_indices
+    integer(kind=4), dimension(t_num), intent(in) :: t_indices
+    real(kind=8), dimension(m%atom_num, 3, m%conf_num), &
+      intent(in) :: coords
+    real(kind=8), dimension(m%atom_num, 3, m%conf_num), &
+      intent(in) :: conf_coords
+    real(kind=8), dimension((p_num + t_num) * (m%conf_num - 2)) :: g
 
     integer(kind=4) :: i, j, angle_num
     real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: vS
@@ -268,29 +271,32 @@ contains
 
   end function g 
 
-  function r(x, atom_num, conf_num)
-    integer(kind=4) :: atom_num, conf_num
-    real(kind=8), dimension(atom_num, 3, conf_num)     :: x
+  pure function r(x, atom_num, conf_num)
+    integer(kind=4), intent(in) :: atom_num, conf_num
+    real(kind=8), dimension(atom_num, 3, conf_num), intent(in) :: x
     real(kind=8), dimension(atom_num - 1, 3, conf_num) :: r
 
     r = x(2:atom_num, :, :) - x(1:(atom_num - 1), :, :)
 
   end function r
 
-  function n(r, atom_num, conf_num)
-    integer(kind=4) :: atom_num, conf_num
-    real(kind=8), dimension(atom_num - 1, 3, conf_num) :: r
-    real(kind=8), dimension(atom_num - 1, 3, conf_num) :: temp_n
+  pure function n(r, atom_num, conf_num)
+    integer(kind=4), intent(in) :: atom_num, conf_num
+    real(kind=8), dimension(atom_num - 1, 3, conf_num), &
+      intent(in) :: r
     real(kind=8), dimension(atom_num - 2, 3, conf_num) :: n
+
+    real(kind=8), dimension(atom_num - 1, 3, conf_num) :: temp_n
 
     temp_n = r / spread(sqrt(sum(r**2, 2)), 2, 3)
     n = temp_n(2:, :, :) 
 
   end function n
 
-  function p(r, atom_num, conf_num)
-    integer(kind=4) :: atom_num, conf_num
-    real(kind=8), dimension(atom_num - 1, 3, conf_num) :: r
+  pure function p(r, atom_num, conf_num)
+    integer(kind=4), intent(in) :: atom_num, conf_num
+    real(kind=8), dimension(atom_num - 1, 3, conf_num), &
+      intent(in) :: r
     real(kind=8), dimension(atom_num - 2, 3, conf_num) :: p
 
     integer(kind=4) :: i, j
@@ -304,9 +310,9 @@ contains
 
   end function p
 
-  function s(x, atom_num, conf_num)
-    integer(kind=4) :: atom_num, conf_num
-    real(kind=8), dimension(atom_num, 3, conf_num) :: x
+  pure function s(x, atom_num, conf_num)
+    integer(kind=4), intent(in) :: atom_num, conf_num
+    real(kind=8), dimension(atom_num, 3, conf_num), intent(in) :: x
     real(kind=8), dimension(atom_num, 3, conf_num) :: s
 
     s(:, :, 2:(conf_num - 1)) = 2*x(:, :, 2:(conf_num - 1)) - &
@@ -314,8 +320,8 @@ contains
 
   end function s
 
-  function mask_p(atom_num)
-    integer(kind=4) :: atom_num
+  pure function mask_p(atom_num)
+    integer(kind=4), intent(in) :: atom_num
     real(kind=8), dimension(atom_num, 3, atom_num - 1) :: mask_p 
     
     integer(kind=4) :: l, i
@@ -329,8 +335,8 @@ contains
 
   end function mask_p
 
-  function mask_t(atom_num)
-    integer(kind=4) :: atom_num
+  pure function mask_t(atom_num)
+    integer(kind=4), intent(in) :: atom_num
     real(kind=8), dimension(atom_num, 3, atom_num - 1) :: mask_t 
     
     integer(kind=4) :: l, i
@@ -345,9 +351,9 @@ contains
   end function mask_t
 
 
-  function q(conf_x, atom_num)
-    integer(kind=4) :: atom_num
-    real(kind=8), dimension(atom_num, 3)               :: conf_x
+  pure function q(conf_x, atom_num)
+    integer(kind=4), intent(in) :: atom_num
+    real(kind=8), dimension(atom_num, 3), intent(in)   :: conf_x
     real(kind=8), dimension(atom_num, 3, atom_num - 1) :: q
     
     q = spread(conf_x, 3, atom_num - 1) - &
