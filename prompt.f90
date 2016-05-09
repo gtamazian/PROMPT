@@ -240,8 +240,15 @@ contains
     vP = p(vR, m%atom_num, m%conf_num)
 
     do j = 2, m%conf_num - 1
-      vQP = q(conf_coords(:, :, j), m%atom_num, 2)
       vQT = q(conf_coords(:, :, j), m%atom_num, 3)
+
+      if (p_num > 0) then
+        vQP = vQT
+        do i = 1, m%atom_num
+          vQP(i + 2, :, i) = conf_coords(i + 2, :, j) - &
+            conf_coords(i + 1, :, j)
+        end do
+      end if
 
       do angle_num = 1, p_num
         i = p_indices(angle_num)
