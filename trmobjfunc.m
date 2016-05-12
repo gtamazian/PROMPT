@@ -35,6 +35,10 @@ function G = g(model, planarIndices, torsionIndices, xTrans, xConf)
 
 nAtoms = size(xTrans, 1);
 nConf = size(xTrans, 3);
+
+GP = zeros(length(planarIndices), nConf-2);
+GT = zeros(length(torsionIndices), nConf-2);
+
 G = zeros(length(planarIndices) + length(torsionIndices), nConf-2);
 
 vS = s(xTrans);
@@ -55,21 +59,21 @@ for j = 2:nConf-1
     
     for angleNumber = 1:length(planarIndices)
         i = planarIndices(angleNumber);
-        G(angleNumber,j-1) = 2 * sum(model.m .* dot(vS(:,:,j), ...
+        GP(angleNumber,j-1) = 2 * sum(model.m .* dot(vS(:,:,j), ...
             cross(repmat(vP(i,:,j), nAtoms, 1), vQP(:,:,i) - ...
             repmat(mean(vQP(:,:,i)), [nAtoms, 1])) * model.U(:,:,j), 2));
     end
     
     for angleNumber = 1:length(torsionIndices)
         i = torsionIndices(angleNumber);
-        G(length(planarIndices) + angleNumber,j-1) =  ...
+        GT(angleNumber,j-1) =  ...
             2 * sum(model.m .* dot(vS(:,:,j), ...
             cross(repmat(vN(i,:,j), nAtoms, 1), vQT(:,:,i) - ...
             repmat(mean(vQT(:,:,i)), [nAtoms, 1])) * model.U(:,:,j), 2));
     end
 end
 
-G = G(:);
+G = [GP(:); GT(:)];
 
 end
 

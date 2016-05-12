@@ -229,49 +229,59 @@ contains
     real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: vS
     real(kind=8), dimension(m%atom_num - 1, 3, m%conf_num) :: vR
     real(kind=8), dimension(m%atom_num - 2, 3, m%conf_num) :: vN, vP
-    real(kind=8), dimension(m%atom_num, 3, m%atom_num - 1) :: vQP, vQT
-    real(kind=8), dimension(m%atom_num, 3) :: mean_vQP, mean_vQT, v
-    real(kind=8), dimension(p_num + t_num, m%conf_num - 2) :: temp_g
+    real(kind=8), dimension(m%atom_num, 3, m%atom_num - 1) :: vQ
+    real(kind=8), dimension(m%atom_num, 3) :: mean_vQ, v
+    real(kind=8), dimension(p_num, m%conf_num - 2) :: grad_p
+    real(kind=8), dimension(t_num, m%conf_num - 2) :: grad_t
 
-    temp_g = 0
     vS = s(coords, m%atom_num, m%conf_num)
     vR = r(conf_coords, m%atom_num, m%conf_num)
     vN = n(vR, m%atom_num, m%conf_num)
     vP = p(vR, m%atom_num, m%conf_num)
 
     do j = 2, m%conf_num - 1
-      vQT = q(conf_coords(:, :, j), m%atom_num, 3)
+      vQ = q(conf_coords(:, :, j), m%atom_num, 3)
 
       if (p_num > 0) then
-        vQP = vQT
-        do i = 1, m%atom_num
-          vQP(i + 2, :, i) = conf_coords(i + 2, :, j) - &
+        do i = 1, m%atom_num - 1
+          vQ(i + 2, :, i) = conf_coords(i + 2, :, j) - &
             conf_coords(i + 1, :, j)
         end do
       end if
 
       do angle_num = 1, p_num
         i = p_indices(angle_num)
-        mean_vQP = spread(sum(vQP(:, :, i) , 1) / m%atom_num, &
+        mean_vQ = spread(sum(vQ(:, :, i) , 1) / m%atom_num, &
           1, m%atom_num)
-        v = cross(spread(vP(i, :, j), 1, m%atom_num), vQP(:, :, i) - &
-          mean_vQP, m%atom_num)
-        temp_g(angle_num, j - 1) = 2 * sum(m%atom_masses * &
+        v = cross(spread(vP(i, :, j), 1, m%atom_num), vQ(:, :, i) - &
+          mean_vQ, m%atom_num)
+        grad_p(angle_num, j - 1) = 2 * sum(m%atom_masses * &
           dot(vS(:, :, j), matmul(v, m%rot_mat(:, :, j)), m%atom_num))
       end do
 
+      if (p_num > 0) then
+        do i = 1, m%atom_num - 1
+          vQ(i + 2, :, i) = 0
+        end do
+      end if
+
       do angle_num = 1, t_num
         i = t_indices(angle_num)
-        mean_vQT = spread(sum(vQT(:, :, i) , 1) / m%atom_num, &
+        mean_vQ = spread(sum(vQ(:, :, i) , 1) / m%atom_num, &
           1, m%atom_num)
-        v = cross(spread(vN(i, :, j), 1, m%atom_num), vQT(:, :, i) - &
-          mean_vQT, m%atom_num)
-        temp_g(p_num + angle_num, j - 1) = 2 * sum(m%atom_masses * &
+        v = cross(spread(vN(i, :, j), 1, m%atom_num), vQ(:, :, i) - &
+          mean_vQ, m%atom_num)
+        grad_t(angle_num, j - 1) = 2 * sum(m%atom_masses * &
           dot(vS(:, :, j), matmul(v, m%rot_mat(:, :, j)), m%atom_num))
       end do
     end do
 
-    g = reshape(temp_g, [(p_num + t_num) * (m%conf_num - 2)])
+    if (p_num > 0) then
+      g(:p_num * (m%conf_num - 2)) = &
+        reshape(grad_p, [p_num * (m%conf_num - 2)])
+    end if
+    g(p_num * (m%conf_num - 2) + 1:) = &
+      reshape(grad_t, [t_num * (m%conf_num - 2)])
 
   end function g 
 
