@@ -6,6 +6,11 @@ function [models, optimResults] = trmiteroptim(trmodel, nPlanar, ...
 %   specifies the number of iterations for each stage; nPlanar and nTorsion
 %   specify the numbers of planar and torsion angles to be optimized;
 %   optimOptions is the structure of the optimization process parameters.
+%   The optimization scheme stops if the current stage have not modified
+%   the initial point. Also one may specify an empty list as the iterSteps
+%   value; in this case, the optimization will continue until local minima
+%   are reached at each stage and the current local minimum differs from
+%   the ones obtained at the previous stage.
 %
 %   See also trmobjfunc
 %
@@ -15,16 +20,21 @@ function [models, optimResults] = trmiteroptim(trmodel, nPlanar, ...
 % gaik (dot) tamazian (at) gmail (dot) com
 
 nSteps = length(iterSteps);
-models = cell(nSteps, 1);
-optimResults = cell(nSteps, 1);
+models = cell(1, nSteps);
+optimResults = cell(1, nSteps);
 
 % first, determine indices of planar and torsion angles to be optimized
 P = trmdistantangleindices(trmodel, nPlanar, 'planar');
 T = trmdistantangleindices(trmodel, nTorsion, 'torsion');
 
-for iStep = 1:nSteps
+iStep = 1;
+while 1
     currOptimOptions = optimOptions;
-    currOptimOptions.MaxIterations = iterSteps(iStep);
+    if nSteps > 0
+        currOptimOptions.MaxIterations = iterSteps(iStep);
+    else
+        currOptimOptions.MaxIterations = Inf;
+    end
     
     % get the objective function for the current stage
     f = @(x) trmobjfunc(trmodel, P, T, x);
@@ -41,5 +51,21 @@ for iStep = 1:nSteps
     optimResults{iStep} = output;
     
     trmodel = trmupdaterotations(trmodel);
+    
+    % check if we should stop the process because the number of steps is
+    % equal to the specified one
+    if (nSteps > 0) && (iStep == nSteps)
+        break
+    end
+    
+    % check if we should stop the process because we have reached the local
+    % minimum
+    if (iStep > 0) && (output.iterations < 2)
+        models = models(1:iStep);
+        optimResults = optimResults(1:iStep);
+        break
+    end
+    
+    iStep = iStep + 1;
 end
 
