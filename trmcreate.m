@@ -32,6 +32,14 @@ if ~all(strcmp(atomNames1, atomNames2))
         'Different atom names in the provided PDB structures.');
 end
 
+resNames1 = {PDBStruct1.Model.Atom.resName};
+resNames2 = {PDBStruct2.Model.Atom.resName};
+
+if ~isequal(resNames1, resNames2)
+    error('PROMPT:trmcreate:differentResidues', ...
+        'Different residues in the provided PDB structures.');
+end
+
 if all(strcmp(unique(atomNames1), {'CA'}))
     onlyCA = true;
 elseif all(strcmp(unique(atomNames1), {'C', 'CA', 'N'}))
