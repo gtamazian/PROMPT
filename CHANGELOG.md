@@ -17,6 +17,8 @@ transformation model and planar and torsion angle indices;
 - Functions `pdbstrip` and `pdbenrich` to process PDB files;
 - Function `trmanimcost` to produce contour plots of the transformation
   cost function;
+- Function `pdbanimrmch` to produce a series of Ramachandran plots for a
+  multimodel PDB file;
 - Option to leave only alpha carbon atoms added to `pdbbackbone`;
 - Option to consider planar angles added to `trmdistantangleindices`;
 - `trmcreate` creates an alpha carbon-based transformation model if the

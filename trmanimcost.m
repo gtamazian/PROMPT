@@ -2,7 +2,7 @@ function trmanimcost(trmodel, firstAngle, secondAngle, prefix, ...
     resolution, cycled)
 %TRMANIMCOST Procude a series of transformation cost countour plots
 %   TRMANIMCOST(model,firstAngle,secondAngle,prefix,resolution,cycled)
-%   produces a series of PNG files that shows countour plots of the
+%   produces a series of PNG files that show countour plots of the
 %   trmodel transformation cost as a function of the specified pair of
 %   torsion angles (firstAngle and secondAngle). The output file names are
 %   composed of the specified prefix and the number. One may specify the
