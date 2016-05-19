@@ -15,6 +15,8 @@ procedure;
 - Function `trminitialpoint` to get an initial point for the specified
 transformation model and planar and torsion angle indices;
 - Functions `pdbstrip` and `pdbenrich` to process PDB files;
+- Function `trmanimcost` to produce contour plots of the transformation
+  cost function;
 - Option to leave only alpha carbon atoms added to `pdbbackbone`;
 - Option to consider planar angles added to `trmdistantangleindices`;
 - `trmcreate` creates an alpha carbon-based transformation model if the
