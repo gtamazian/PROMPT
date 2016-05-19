@@ -1,5 +1,5 @@
 function enPDBStruct = pdbenrich(origPDBStruct, fullPDBStruct)
-%PDBENRICH Enrich a PDB structure with fields from another one.
+%PDBENRICH Enrich a PDB structure with fields from another one
 %   PDBENRICH(origPDBStruct,fullPDBStruct) adds to the origPDBStruct
 %   structure fields rhat are missing in it but present in the
 %   fullPDBStruct structure.

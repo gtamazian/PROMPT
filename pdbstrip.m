@@ -1,5 +1,5 @@
 function strPDBStruct = pdbstrip(PDBStruct)
-%PDBSTRIP Strip a PDB structure of all fields except for atom coordinates.
+%PDBSTRIP Strip a PDB structure of all fields except for atom coordinates
 %   PDBSTRIP(PDBStruct) returns a PDB structure derived from the specified
 %   one by removing all its fields except atom coordinates, namely,
 %   Model.Atoms. If the atom coordinate field is absent, then the error
