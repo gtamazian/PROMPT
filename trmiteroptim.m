@@ -17,7 +17,7 @@ function [models, optimResults] = trmiteroptim(trmodel, nPlanar, ...
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 nSteps = length(iterSteps);
 models = cell(1, nSteps);

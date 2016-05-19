@@ -9,7 +9,7 @@ function h = trmplotfixedrmsd(trmodels, confNo)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014-2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 % if a single transformation model is specified instead a cell array, then
 % create a cell array with a single element from it

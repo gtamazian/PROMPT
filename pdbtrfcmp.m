@@ -18,7 +18,7 @@ function result = pdbtrfcmp(PDBStruct1, PDBStruct2)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 coords1 = pdbextractcoords(PDBStruct1);
 coords2 = pdbextractcoords(PDBStruct2);

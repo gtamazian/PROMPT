@@ -10,7 +10,7 @@ function cost = pdbtrfcost(PDBStruct)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 p = 2;
 nModels = length(PDBStruct.Model);

@@ -12,7 +12,7 @@ function reducedAngles = reduceangles(angles)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 I = angles > pi; % indices of angles to be reduced
 while sum(sum(I))

@@ -10,7 +10,7 @@ function strPDBStruct = pdbstrip(PDBStruct)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 if isfield(PDBStruct, 'Model') && isfield(PDBStruct.Model, 'Atom')
     strPDBStruct = struct;

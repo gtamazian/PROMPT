@@ -12,7 +12,7 @@ function result = sidechainmass(sideChains)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 persistent symbols;
 persistent masses;

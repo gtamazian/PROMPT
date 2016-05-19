@@ -10,7 +10,7 @@ function [h, rmsdValues] = pdbplottrfcmp(pdbStruct1, pdbStruct2)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2015-2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 nModels = length(pdbStruct1.Model);
 rmsdValues = zeros(nModels, 1);

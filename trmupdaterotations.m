@@ -9,7 +9,7 @@ function result = trmupdaterotations(trmodel)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 prevCoords = trmodel.StartCoords;
 nModels = size(trmodel.r, 2);

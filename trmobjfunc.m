@@ -11,7 +11,7 @@ function [F, G] = trmobjfunc(trmodel, planarIndices, torsionIndices, ...
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014-2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 trmodel = trmchangeangles(trmodel, planarIndices, torsionIndices, angles);
 
@@ -31,7 +31,7 @@ function G = g(model, planarIndices, torsionIndices, xTrans, xConf)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014-2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 nAtoms = size(xTrans, 1);
 nConf = size(xTrans, 3);

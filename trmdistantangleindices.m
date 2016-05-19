@@ -10,7 +10,7 @@ function angleIndices = trmdistantangleindices(trmodel, nAngles, angleType)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014-2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 if nargin < 3
     angleType = 'torsion';

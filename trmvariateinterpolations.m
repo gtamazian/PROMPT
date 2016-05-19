@@ -10,7 +10,7 @@ function transformations = trmvariateinterpolations(trmodel, nAngles)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 transformations = cell(nAngles,1);
 interpmask = 1 - getbinarycode([],nAngles);

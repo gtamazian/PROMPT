@@ -13,7 +13,7 @@ function G = getbinarycode(X, N)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 if N > 0
     G = [getbinarycode([X,0], N-1); getbinarycode([X,1], N-1)];

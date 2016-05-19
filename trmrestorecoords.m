@@ -11,7 +11,7 @@ function [coords, confCoords] = trmrestorecoords(trmodel)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014-2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 nConf = size(trmodel.psi, 2);
 nAtoms = size(trmodel.r, 1) + 1;

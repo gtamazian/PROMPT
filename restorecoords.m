@@ -27,7 +27,7 @@ function coords = restorecoords(r, alpha, psi)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 nAtoms = length(r) + 1;
 coords = zeros(nAtoms, 3);

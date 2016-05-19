@@ -10,7 +10,7 @@ function PDBStruct = trm2pdb(trmodel, initialPDBStruct)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 PDBStruct = initialPDBStruct;
 PDBStruct.Model = PDBStruct.Model(1);

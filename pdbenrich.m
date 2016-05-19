@@ -9,7 +9,7 @@ function enPDBStruct = pdbenrich(origPDBStruct, fullPDBStruct)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 commonFields = intersect(fieldnames(fullPDBStruct), ...
     fieldnames(origPDBStruct));

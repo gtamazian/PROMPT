@@ -11,7 +11,7 @@ function initialPoint = trminitialpoint(trmodel, planarIndices, ...
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2016.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 initialPointP = trmodel.alpha(planarIndices, 2:end-1);
 initialPointT = trmodel.psi(torsionIndices, 2:end-1);

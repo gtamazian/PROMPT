@@ -13,7 +13,7 @@ function C = cross3d(A, B)
 % PROMPT Toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 C = [A(2)*B(3) - A(3)*B(2), ...
     A(3)*B(1) - A(1)*B(3), ...

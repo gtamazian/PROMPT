@@ -1,10 +1,10 @@
 function Z = circinterp(X, Y, nValues, shortArc)
 %CIRCINTERP Circular interpolation of angles by the specified arcs
-%   CIRCINTERP(X, Y, nValues, shortArc) returns the matrix that contains 
+%   CIRCINTERP(X, Y, nValues, shortArc) returns the matrix that contains
 %   circular interpolations between the specified angle vectors X and Y.
-%   nValue is the number of interpolated values. shortArc is a boolean 
+%   nValue is the number of interpolated values. shortArc is a boolean
 %   vector which specifies directions of circular interpolation for
-%   each pair of angles from X and Y. True values correspond to short-arc 
+%   each pair of angles from X and Y. True values correspond to short-arc
 %   interpolation, false values to long-arc interpolation.
 %
 %   Examples:
@@ -21,7 +21,7 @@ function Z = circinterp(X, Y, nValues, shortArc)
 % PROMPT toolbox for MATLAB
 
 % By Gaik Tamazian, 2014.
-% gaik (dot) tamazian (at) gmail (dot) com
+% mail (at) gtamazian (dot) com
 
 nAngles = numel(X);
 
