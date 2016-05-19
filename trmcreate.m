@@ -42,7 +42,8 @@ end
 
 if all(strcmp(unique(atomNames1), {'CA'}))
     onlyCA = true;
-elseif all(strcmp(unique(atomNames1), {'C', 'CA', 'N'}))
+elseif length(unique(atomNames1)) == 3 && ...
+        all(strcmp(unique(atomNames1), {'C', 'CA', 'N'}))
     onlyCA = false;
 else
     error('PROMPT:trmcreate:nonBackboneAtoms', ...
