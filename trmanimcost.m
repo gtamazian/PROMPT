@@ -1,15 +1,16 @@
 function trmanimcost(trmodel, firstAngle, secondAngle, prefix, ...
-    resolution, cycled)
+    resolution, cycled, caption)
 %TRMANIMCOST Procude a series of transformation cost countour plots
-%   TRMANIMCOST(model,firstAngle,secondAngle,prefix,resolution,cycled)
-%   produces a series of PNG files that show countour plots of the
+%   TRMANIMCOST(model,firstAngle,secondAngle,prefix,resolution,cycled,
+%   caption) produces a series of PNG files that show countour plots of the
 %   trmodel transformation cost as a function of the specified pair of
 %   torsion angles (firstAngle and secondAngle). The output file names are
 %   composed of the specified prefix and the number. One may specify the
 %   number of points between -pi and pi the countour plot will be build on
 %   in the 'resolution' parameter; its default value is 10. Also one may
 %   produce a series of figures that correspond to a cycled animation by
-%   specifying the 'cycled' parameter equal to true.
+%   specifying the 'cycled' parameter equal to true. The plot caption can
+%   be  added by specifying its value in the 'caption' parameter.
 %
 %   See also pdbanimrmch
 %
@@ -24,6 +25,10 @@ end
 
 if nargin < 6
     cycled = true;
+end
+
+if nargin < 7
+    caption = '';
 end
 
 nConf = size(trmodel.r, 2);
@@ -53,7 +58,7 @@ for i = 2:(nConf - 1)
     contour(X, Y, Z(:, :, i));
     xlabel(['Torsion Angle #', num2str(firstAngle)]);
     ylabel(['Torsion Angle #', num2str(secondAngle)]);
-    title(['Configuration #', num2str(i)]);
+    title([caption, ' Configuration #', num2str(i)]);
     grid
     hold on
     plot(point(2*(i - 2) + 1), point(2*(i - 2) + 2), 'xr', ...
@@ -67,7 +72,7 @@ if cycled
         contour(X, Y, Z(:, :, i));
         xlabel(['Torsion Angle #', num2str(firstAngle)]);
         ylabel(['Torsion Angle #', num2str(secondAngle)]);
-        title(['Configuration #', num2str(i)]);
+        title([caption, ' Configuration #', num2str(i)]);
         grid
         hold on
         plot(point(2*(i - 2) + 1), point(2*(i - 2) + 2), 'xr', ...
