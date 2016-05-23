@@ -18,7 +18,7 @@ struct2 = PDBStruct; struct2.Model = struct2.Model(end);
 trmodel = trmcreate(struct1,struct2,nModels-2);
 
 [~,~,psi] = createmodel(PDBStruct);
-trmodel.psi(:,2:end-1) = psi(:,2:end-1);
+trmodel.psi(:,2:end-1) = reduceangles(psi(:,2:end-1));
 
 end
 
