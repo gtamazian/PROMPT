@@ -31,14 +31,7 @@ for i = 1:nTrans
     end
 end
 
-markers = {'s', 'o', '^', '+', 'x', 'd', 'v', '*', 'p', 'h'};
-markers = repmat(markers, ceil(nTrans / length(markers)));
-markers = markers(:);
-for i = 1:size(rmsdValues, 1)
-    h = plot(rmsdValues(i,:), ['-', markers{i}]);
-    hold on
-end
-hold off
+matplot(rmsdValues', 'type', 'b', 'lty', '-');
 xlabel('Configuration Pair');
 ylabel('RMSD in Angstroms');
 

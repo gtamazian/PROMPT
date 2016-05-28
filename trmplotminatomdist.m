@@ -24,14 +24,7 @@ for i = 1:nTrans
     minDistValues(i,:) = trmmininteratomicdist(trmodels{i});
 end
 
-markers = {'s', 'o', '^', '+', 'x', 'd', 'v', '*', 'p', 'h'};
-markers = repmat(markers, ceil(nTrans / length(markers)));
-markers = markers(:);
-for i = 1:size(minDistValues, 1)
-    h = plot(minDistValues(i,:), ['-', markers{i}]);
-    hold on
-end
-hold off
+matplot(minDistValues', 'type', 'b', 'lty', '-');
 xlabel('Configuration Number');
 ylabel('Minimal Interatomic Distance in Angstroms');
 
