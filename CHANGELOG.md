@@ -21,6 +21,8 @@ transformation model and planar and torsion angle indices;
   multimodel PDB file;
 - Function `pdbcartinterp` to perform linear interpolation of Cartesian
   atom coordinates between two PDB structures;
+- Functions `pdbgetchainids` and `pdbextractchain` to get chains from
+  multichain PDB files;
 - Option to leave only alpha carbon atoms added to `pdbbackbone`;
 - Option to consider planar angles added to `trmdistantangleindices`;
 - `trmcreate` creates an alpha carbon-based transformation model if the
