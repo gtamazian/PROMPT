@@ -1,7 +1,9 @@
-function h = trmplotadjrmsd(trmodels)
+function rmsdValues = trmplotadjrmsd(trmodels, color)
 %TRMPLOTADJRMSD Plot RMSDs between adjacent configurations
-%   TRMPLOTADJRMSD(trmodels) plots RMSDs between adjacent configurations of
-%   transformation models specified in a cell array trmodels.
+%   TRMPLOTADJRMSD(trmodels,color) plots RMSDs between adjacent
+%   configurations of transformation models specified in a cell array
+%   trmodels. A single color for the plot may be specified in the optional
+%   color argument.
 %
 %   See also trmplotfixedrmsd trmplottranglediff trmplotminatomdist
 %
@@ -12,6 +14,11 @@ function h = trmplotadjrmsd(trmodels)
 
 % if a single transformation model is specified instead a cell array, then
 % create a cell array with a single element from it
+
+if nargin < 2
+    color = 0;
+end
+
 if ~iscell(trmodels)
     trmodels = {trmodels};
 end
@@ -31,7 +38,16 @@ for i = 1:nTrans
     end
 end
 
-matplot(rmsdValues', 'type', 'b', 'lty', '-');
+if color
+    if size(rmsdValues, 1) > 10
+        warning('PROMPT:trmplotadjrmsd:repetitiveMarkers', ...
+            'repetitive markers of the same color will be shown');
+    end
+    matplot(rmsdValues', 'type', 'b', 'lty', '-', 'col', color);
+else
+    matplot(rmsdValues', 'type', 'b', 'lty', '-');
+end
+
 xlabel('Configuration Pair');
 ylabel('RMSD in Angstroms');
 

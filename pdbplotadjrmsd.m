@@ -1,7 +1,9 @@
-function [h, rmsdValues] = pdbplotadjrmsd(pdbStruct)
+function rmsdValues = pdbplotadjrmsd(pdbStruct, color)
 %PDBPLOTADJRMSD Plot RMSDs between adjacent models
 %   PDBPLOTADJRMSD(pdbStruct) plots RMSDs between adjacent 
-%   models of PDB structures specified in the cell array pdbStruct.
+%   models of PDB structures specified in the cell array pdbStruct. A
+%   single color for the plot may be specified in the optional color
+%   argument.
 %
 %   See also pdbplotfixedrmsd trmplotadjrmsd trmplotfixedrmsd
 %
@@ -12,6 +14,11 @@ function [h, rmsdValues] = pdbplotadjrmsd(pdbStruct)
 
 % if a single PDB structure model is specified instead a cell array, then
 % create a cell array with a single element from it
+
+if nargin < 2
+    color = 0;
+end
+
 if ~iscell(pdbStruct)
     pdbStruct = {pdbStruct};
 end
@@ -31,7 +38,15 @@ for i = 1:nTrans
     end
 end
 
-matplot(rmsdValues', 'type', 'b', 'lty', '-');
+if color
+    if size(rmsdValues, 1) > 10
+        warning('PROMPT:trmplotadjrmsd:repetitiveMarkers', ...
+            'repetitive markers of the same color will be shown');
+    end
+    matplot(rmsdValues', 'type', 'b', 'lty', '-', 'col', color);
+else
+    matplot(rmsdValues', 'type', 'b', 'lty', '-');
+end
 xlabel('Configuration Pair');
 ylabel('RMSD in Angstroms');
 

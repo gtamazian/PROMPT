@@ -1,8 +1,9 @@
-function h = pdbplotfixedrmsd(pdbStruct, modelNo)
+function rmsdValues = pdbplotfixedrmsd(pdbStruct, modelNo, color)
 %PDBPLOTFIXEDRMSD Plot RMSDs between models and the specified one
 %   PDBPLOTFIXEDRMSD(pdbStruct, modelNo) plots RMSDs between all 
 %   models of transformations specified in the cell array pdbStruct 
-%   and the model with the specified number modelNo.
+%   and the model with the specified number modelNo. A single color for
+%   the plot may be specified in the optional color argument.
 %
 %   See also pdbplotadjrmsd trmplotadjrmsd trmplotfixedrmsd
 %
@@ -13,6 +14,11 @@ function h = pdbplotfixedrmsd(pdbStruct, modelNo)
 
 % if a single PDB structure is specified instead a cell array, then
 % create a cell array with a single element from it
+
+if nargin < 3
+    color = 0;
+end
+
 if ~iscell(pdbStruct)
     pdbStruct = {pdbStruct};
 end
@@ -32,7 +38,15 @@ for i = 1:nTrans
     end
 end
 
-matplot(rmsdValues', 'type', 'b', 'lty', '-');
+if color
+    if size(rmsdValues, 1) > 10
+        warning('PROMPT:trmplotadjrmsd:repetitiveMarkers', ...
+            'repetitive markers of the same color will be shown');
+    end
+    matplot(rmsdValues', 'type', 'b', 'lty', '-', 'col', color);
+else
+    matplot(rmsdValues', 'type', 'b', 'lty', '-');
+end
 xlabel('Configuration Number');
 ylabel('RMSD in Angstroms');
 
