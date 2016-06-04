@@ -15,7 +15,15 @@ function trmodel = trmcreate(PDBStruct1, PDBStruct2, nConf)
 
 % check if the specified structures contain a single model
 if length(PDBStruct1.Model) + length(PDBStruct2.Model) > 2
-    error('the specified PDBStruct objects contain more than one model');
+    error('PROMPT:trmcreate:multipleModels', ...
+        'the specified PDBStruct objects contain more than one model');
+end
+
+% check if the specified structures contain a single chain
+if length(unique([PDBStruct1.Model.Atom.chainID])) + ...
+        length(unique([PDBStruct2.Model.Atom.chainID])) > 2
+    error('PROMPT:trmcreate:multipleChains', ...
+        'the specified PDBStruct objects contain more than one chain');
 end
 
 % check atoms in the provided PDB structures

@@ -23,6 +23,8 @@ transformation model and planar and torsion angle indices;
 - Option to consider planar angles added to `trmdistantangleindices`;
 - `trmcreate` creates an alpha carbon-based transformation model if the
 specified PDB structures contains only alpha carbon atoms;
+- `trmcreate` checks if the specified PDB structures contain multiple
+  chains;
 - `pdbcost` supports PDB files containing alpha carbon-based structures;
 - `trmplottranglediff` replaced with the `trmplotanglediff` function that
 supports both planar and torsion angles;
