@@ -17,6 +17,8 @@ transformation model and planar and torsion angle indices;
 - Functions `pdbstrip` and `pdbenrich` to process PDB files;
 - Function `trmanimcost` to produce contour plots of the transformation
   cost function;
+- Function `trmplotgradperf` to measure performance of the
+  transformation cost gradient computation;
 - Function `pdbanimrmch` to produce a series of Ramachandran plots for a
   multimodel PDB file;
 - Function `pdbcartinterp` to perform linear interpolation of Cartesian
