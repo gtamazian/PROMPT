@@ -100,6 +100,13 @@ trmodel.psi   = zeros(length(trmodel.m) - 3, nConf+2);
 [trmodel.r(:,end), trmodel.alpha(:,end), trmodel.psi(:,end)] = ...
     createmodel(PDBStruct2);
 
+% Check for outliers among the bond length values.
+rMean = mean([trmodel.r(:,1); trmodel.r(:,end)]);
+if any([trmodel.r(:,1); trmodel.r(:,end)] > 2*rMean)
+    warning('PROMPT:trmcreate:bondLengthOutlier', ...
+        'a possible bond length outlier detected');
+end
+
 % Calculate intermediate bond lengths and planar angles.
 trmodel.r(:,2:end-1) = ...
     interpolate(trmodel.r(:,1), trmodel.r(:,end), nConf);

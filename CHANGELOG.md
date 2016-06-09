@@ -29,6 +29,7 @@ transformation model and planar and torsion angle indices;
 specified PDB structures contains only alpha carbon atoms;
 - `trmcreate` checks if the specified PDB structures contain multiple
   chains;
+- `trmcreate` checks for bonds which length is anomalously great;
 - `pdbcost` supports PDB files containing alpha carbon-based structures;
 - `trmplottranglediff` replaced with the `trmplotanglediff` function that
 supports both planar and torsion angles;
