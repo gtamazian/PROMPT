@@ -1,10 +1,12 @@
 function [models, optimResults] = trmiteroptim(trmodel, nPlanar, ...
-    nTorsion, optimOptions, nIterations)
+    nTorsion, schemeOptions, nIterations)
 %TRMITEROPTIM Iterative optimization scheme.
-%   TRMITEROPTIM(trmodel, nPlanar, nTorsion, optimOptions, nIterations)
+%   TRMITEROPTIM(trmodel, nPlanar, nTorsion, schemeOptions, nIterations)
 %   implements an iterative optimization scheme; nPlanar and nTorsion
 %   specify the numbers of planar and torsion angles to be optimized;
-%   optimOptions is the structure of the optimization process parameters;
+%   schemeOptions is the structure of the optimization process parameters
+%   (by default, it is the same as optimoptions('fminunc') with the
+%   infinite numbers of iterations and function evaluations);
 %   nIterations is the maximum number of optimization stages (the default
 %   values is Inf). The optimization scheme stops if the current stage
 %   have not modified the initial point or the number of stages is greater
@@ -16,6 +18,15 @@ function [models, optimResults] = trmiteroptim(trmodel, nPlanar, ...
 
 % By Gaik Tamazian, 2016.
 % mail (at) gtamazian (dot) com
+
+if nargin < 4
+    schemeOptions = optimoptions('fminunc', ...
+        'Algorith', 'quasi-newton', ...
+        'Display', 'iter', ...
+        'SpecifyObjectiveGradient', true, ...
+        'MaxIterations', Inf, ...
+        'MaxFunctionEvaluations', Inf);
+end
 
 if nargin < 5
     nIterations = Inf;
@@ -36,7 +47,7 @@ while 1
     % get the initial point
     initial_point = trminitialpoint(trmodel, P, T);
     
-    problem.options = optimOptions;
+    problem.options = schemeOptions;
     problem.solver = 'fminunc';
     problem.x0 = initial_point;
     problem.objective = f;
