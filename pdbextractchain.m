@@ -4,7 +4,7 @@ function outputPDB = pdbextractchain(PDBStruct, chainID)
 %   contains only the specified chain from the provided PDB structure 
 %   PDBStruct.
 %
-%   See also pdbgetchainids
+%   See also pdbgetchainids pdbextractchain pdbextractaltloc
 %
 % PROMPT Toolbox for MATLAB
 
