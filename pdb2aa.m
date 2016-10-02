@@ -1,14 +1,14 @@
 function aa = pdb2aa(PDBStruct)
 %PDB2AA Return a cell array of PDB structure amino acid sequences
 %   PDB2AA(PDBStruct) returns a cell array which values are strings of
-%   amino acid single letters. Each cell element corresponds to a single
-%   model of the specified PDB structure.
+%   amino acid single letters. The provided PDB structure must contain a
+%   single model, otherwise an error message is shown.
 %
 %   See also sidechainmass
 %
 %   PROMPT Toolbox for MATLAB
 
-% By Gaik Tamazian, 2014.
+% By Gaik Tamazian, 2014-2016.
 % mail (at) gtamazian (dot) com
 
 persistent symbols;
