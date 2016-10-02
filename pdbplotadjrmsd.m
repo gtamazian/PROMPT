@@ -52,11 +52,20 @@ ylabel('RMSD in Angstroms');
 
 % modify x axis tick labels
 ax = gca;
-xticks = get(ax,'XTickLabel');
-for j = 1:nModels-1
-    xticks{j} = [int2str(j),'-',int2str(j+1)];
+if nModels > 10
+    tickStep = 10;
+else
+    tickStep = nModels - 1;
+end
+tickPositions = floor(linspace(1, nModels-1, tickStep));
+set(ax,'XTick', tickPositions);
+xticks = cell(length(tickPositions), 1);
+for j = 1:length(tickPositions)
+    xticks{j} = [int2str(tickPositions(j)),'-',...
+        int2str(tickPositions(j)+1)];
 end
 set(ax,'XTickLabel',xticks);
+
 
 end
 
