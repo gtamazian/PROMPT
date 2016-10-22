@@ -1,13 +1,18 @@
 FC = gfortran
 
-FCFLAGS = -g -O3 -fimplicit-none
+FCFLAGS = -O3
 
-# The following values are given for the OS X systm. For Linux, they
-# should be the following:
-#   BIN_SUFFIX = glnxa64
-#   MEX_SUFFIX = a64
-# Also one should specify the appropriate MATLAB location in the
-# MATLAB_ROOT variable.
+GFORT_DFLAGS = -g -O0 -Wall -Wextra -Warray-temporaries -Wconversion \
+	-fimplicit-none -fbacktrace -ffree-line-length-0 -fcheck=all \
+	-fbackslash -ffpe-trap=zero,overflow,underflow -finit-real=nan
+
+IFORT_DFLAGS = -g -O0 -check all -fpe0 -warn -traceback -debug extended
+
+ifeq ($(FC), ifort)
+	DFLAGS = $(IFORT_DFLAGS)
+else
+	DFLAGS = $(GFORT_DFLAGS)
+endif
 
 ifndef MATLAB_ROOT
 	MATLAB_ROOT := $(shell which matlab | sed 'sA/bin/matlabAA')
@@ -34,8 +39,7 @@ endif
 
 all: trmobjfunc.mex$(MEX_SUFFIX) trmoptim.mex$(MEX_SUFFIX)
 
-debug: FCFLAGS += -O0 -fbounds-check -Wall -Wextra -pedantic \
-    -fbacktrace
+debug: FCFLAGS += $(DFLAGS)
 debug: all
 
 prompt.o: prompt.f90
@@ -44,12 +48,12 @@ prompt.o: prompt.f90
 trmobjfunc.o: trmobjfunc.F prompt.o
 	$(FC) $(FCFLAGS) -c -DMX_COMPAT_32 \
 		-I"$(MATLAB_ROOT)/extern/include/" -fexceptions \
-		-fbackslash -fPIC -fno-omit-frame-pointer -o $@ -O $<
+		-fPIC -fno-omit-frame-pointer -o $@ -O $<
 
 trmoptim.o: trmoptim.F prompt.o
 	$(FC) $(FCFLAGS) -c -DMX_COMPAT_32 \
 		-I"$(MATLAB_ROOT)/extern/include/" -fexceptions \
-		-fbackslash -fPIC -fno-omit-frame-pointer -o $@ -O $<
+		-fPIC -fno-omit-frame-pointer -o $@ -O $<
 
 trmobjfunc.mex$(MEX_SUFFIX): trmobjfunc.o prompt.o
 	$(FC) $(FCFLAGS) -pthread -shared -O $^ \
@@ -66,5 +70,5 @@ trmoptim.mex$(MEX_SUFFIX): trmoptim.o prompt.o
 .PHONY: clean
 
 clean:
-	rm *.o *.mod *.mex$(MEX_SUFFIX)
+	rm -f *.o *.mod *.mex$(MEX_SUFFIX)
 
