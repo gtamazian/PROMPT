@@ -350,5 +350,73 @@ contains
 
   end function q
 
+  ! Gradient descent with backtracing line search
+  subroutine gradDesc(m, p_num, p_indices, t_num, t_indices, &
+    grad_tol, max_steps, x_vec, func_val, grad_norm, exit_flag)
+    type(TrModel),      intent(in)                      :: m
+    integer(kind=4),    intent(in)                      :: p_num
+    integer(kind=4),    intent(in), dimension(p_num)    :: p_indices
+    integer(kind=4),    intent(in)                      :: t_num
+    integer(kind=4),    intent(in), dimension(t_num)    :: t_indices
+    real(kind=8),       intent(in)                      :: grad_tol
+    integer(kind=4),    intent(in)                      :: max_steps
+    real(kind=8),       intent(out), &
+      dimension((p_num + t_num) * (m%conf_num - 2))     :: x_vec
+    real(kind=8),       intent(out)                     :: func_val
+    real(kind=8),       intent(out)                     :: grad_norm
+    integer(kind=4),    intent(out)                     :: exit_flag
+
+    real(kind=8), &
+      dimension((p_num + t_num) * (m%conf_num - 2))     :: grad_vec
+    real(kind=8)                                        :: new_func_val
+    real(kind=8), &
+      dimension((p_num + t_num) * (m%conf_num - 2))     :: new_grad_vec
+    real(kind=8)                                        :: b = 0.5
+    real(kind=8)                                        :: t
+    integer(kind=4)                                     :: i
+
+    if (p_num > 0) then
+        x_vec(:p_num * (m%conf_num - 2)) = reshape( &
+          m%alpha(p_indices, 2:m%conf_num - 1), &
+          [p_num * (m%conf_num - 2)])
+    endif
+
+    if (t_num > 0) then
+        x_vec(p_num * (m%conf_num - 2) + 1:) = reshape( &
+          m%psi(t_indices, 2:m%conf_num - 1), &
+          [t_num * (m%conf_num - 2)])
+    endif
+
+    exit_flag = 0
+
+    do i = 1, max_steps
+        call objFunc(m, p_num, p_indices, t_num, t_indices, x_vec, &
+          2, .TRUE., func_val, grad_vec)
+        grad_norm = norm2(grad_vec)
+        t = 1.0
+        do while (.TRUE.)
+            call objFunc(m, p_num, p_indices, t_num, t_indices, &
+                x_vec - t * grad_vec, 2, .FALSE., new_func_val, &
+                new_grad_vec)
+            if (func_val - new_func_val < (t/2 * grad_norm ** 2)) then
+                t = t * b
+            else
+                exit
+            endif
+        end do
+        x_vec = x_vec - t * grad_vec
+        if (grad_norm < grad_tol) then
+            exit_flag  = 1
+            exit
+        endif
+    end do
+
+    call objFunc(m, p_num, p_indices, t_num, t_indices, x_vec, &
+      2, .TRUE., func_val, grad_vec)
+    grad_norm = norm2(grad_vec)
+
+    return
+    end subroutine gradDesc
+
 end module prompt
 
