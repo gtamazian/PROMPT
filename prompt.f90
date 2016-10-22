@@ -243,7 +243,7 @@ contains
       vQ = q(conf_coords(:, :, j), m%atom_num, 3)
 
       if (p_num > 0) then
-        do i = 1, m%atom_num - 1
+        do i = 1, m%atom_num - 2
           vQ(i + 2, :, i) = conf_coords(i + 2, :, j) - &
             conf_coords(i + 1, :, j)
         end do
@@ -260,7 +260,7 @@ contains
       end do
 
       if (p_num > 0) then
-        do i = 1, m%atom_num - 1
+        do i = 1, m%atom_num - 2
           vQ(i + 2, :, i) = 0
         end do
       end if
