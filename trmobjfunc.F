@@ -15,15 +15,15 @@
       integer       :: nlhs, nrhs
 
       ! Function declarations
-      mwPointer     :: mxCreateDoubleMatrix, mxCreateDoubleScalar
-      mwPointer     :: mxGetPr, mxGetField, mxGetCell
+      mwPointer     :: mxCreateDoubleMatrix
+      mwPointer     :: mxGetPr, mxGetField
       mwPointer     :: mxGetM, mxGetN
       integer       :: mxIsStruct, mxIsNumeric
 
       ! Pointers to input data
       mwPointer      :: model_ptr, p_index_ptr, t_index_ptr, angle_ptr
       mwPointer      :: masses_ptr, r_ptr, alpha_ptr, psi_ptr, 
-     +  str_crd_ptr, end_crd_ptr, rot_mat_ptr
+     +  str_crd_ptr, rot_mat_ptr
       
       ! Pointers to output data
       mwPointer      :: fval_ptr, grad_ptr
@@ -36,6 +36,7 @@
       real(kind=8), allocatable, dimension(:) :: angle_values
       real(kind=8)                            :: func_val
       real(kind=8), allocatable, dimension(:) :: grad_vec
+      real(kind=8), allocatable, dimension(:,:) :: temp_coords
       
       ! Check for the proper number of function arguments
       if (nrhs .ne. 4) then
@@ -102,7 +103,8 @@
       allocate(m%r(atom_num - 1, conf_num))
       allocate(m%alpha(atom_num - 2, conf_num))
       allocate(m%psi(atom_num - 3, conf_num))
-      allocate(m%start_coords(atom_num, 3))
+      allocate(m%start_coords(3, atom_num))
+      allocate(temp_coords(atom_num, 3))
       allocate(m%rot_mat(3, 3, conf_num))
       allocate(p_indices(p_num))
       allocate(angle_values((p_num + t_num) * (conf_num - 2)))
@@ -119,8 +121,9 @@
      +  conf_num)
       call mxCopyPtrToReal8(psi_ptr, m%psi, (atom_num - 3) * 
      +  conf_num)
-      call mxCopyPtrToReal8(str_crd_ptr, m%start_coords, 
+      call mxCopyPtrToReal8(str_crd_ptr, temp_coords,
      +  atom_num * 3)
+      m%start_coords = transpose(temp_coords)
       call mxCopyPtrToReal8(rot_mat_ptr, m%rot_mat, conf_num * 3 * 3)
       call mxCopyPtrToReal8(p_index_ptr, p_indices, p_num)
       call mxCopyPtrToReal8(t_index_ptr, t_indices, t_num)
@@ -141,7 +144,9 @@
       deallocate(m%atom_masses)
       deallocate(m%r, m%alpha, m%psi)
       deallocate(m%start_coords, m%rot_mat)
+      deallocate(temp_coords)
       deallocate(angle_values, p_indices, t_indices)
+      deallocate(grad_vec)
 
       return
       end subroutine mexFunction

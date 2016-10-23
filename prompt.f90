@@ -30,28 +30,28 @@ contains
 
   pure function cross(a, b, n) result(c)
     integer(kind=4), intent(in)               :: n
-    real(kind=8), dimension(n, 3), intent(in) :: a, b
-    real(kind=8), dimension(n, 3) :: c
+    real(kind=8), dimension(3, n), intent(in) :: a, b
+    real(kind=8), dimension(3, n) :: c
 
     integer(kind=4) :: i
 
     do i = 1, n
-      c(i, 1) = a(i, 2) * b(i, 3) - a(i, 3) * b(i, 2)
-      c(i, 2) = a(i, 3) * b(i, 1) - a(i, 1) * b(i, 3)
-      c(i, 3) = a(i, 1) * b(i, 2) - a(i, 2) * b(i, 1)
+      c(1, i) = a(2, i) * b(3, i) - a(3, i) * b(2, i)
+      c(2, i) = a(3, i) * b(1, i) - a(1, i) * b(3, i)
+      c(3, i) = a(1, i) * b(2, i) - a(2, i) * b(1, i)
     end do
 
   end function cross
 
   pure function dot(a, b, n) result(c)
     integer(kind=4), intent(in) :: n
-    real(kind=8), dimension(n, 3), intent(in) :: a, b
+    real(kind=8), dimension(3, n), intent(in) :: a, b
     real(kind=8), dimension(n) :: c
 
     integer(kind=4) :: i
 
     do i = 1, n
-      c(i) = dot_product(a(i, :), b(i, :))
+      c(i) = dot_product(a(:, i), b(:, i))
     end do
 
   end function dot
@@ -63,34 +63,34 @@ contains
     real(kind=8),    intent(in)  :: r(atom_num - 1)
     real(kind=8),    intent(in)  :: alpha(atom_num -2)
     real(kind=8),    intent(in)  :: psi(atom_num - 3)
-    real(kind=8)                 :: coords(atom_num, 3)
+    real(kind=8)                 :: coords(3, atom_num)
 
     integer(kind=4)               :: i
     real(kind=8), dimension(3)    :: bc, n
     real(kind=8), dimension(3, 3) :: M
 
-    coords(1, :) = [0.0d0, 0.0d0, 0.0d0]
-    coords(2, :) = [r(1), 0.0d0, 0.0d0]
-    coords(3, :) = coords(2, :) + [r(2) * cos(alpha(1)), r(2) * &
+    coords(:, 1) = [0.0d0, 0.0d0, 0.0d0]
+    coords(:, 2) = [r(1), 0.0d0, 0.0d0]
+    coords(:, 3) = coords(:, 2) + [r(2) * cos(alpha(1)), r(2) * &
       sin(alpha(1)), 0.0d0]
 
-    coords(4:, 1) = r(3:) * cos(alpha(2:))
-    coords(4:, 2) = r(3:) * sin(alpha(2:)) * cos(psi)
-    coords(4:, 3) = r(3:) * sin(alpha(2:)) * sin(psi)
+    coords(1, 4:) = r(3:) * cos(alpha(2:))
+    coords(2, 4:) = r(3:) * sin(alpha(2:)) * cos(psi)
+    coords(3, 4:) = r(3:) * sin(alpha(2:)) * sin(psi)
 
     do i = 4, atom_num
       ! calculate the bc vector
-      bc = coords(i-1, :) - coords(i-2, :)
+      bc = coords(:, i-1) - coords(:, i-2)
       bc = bc / sqrt(sum(bc**2))
       ! calculate the n vector
-      n = cross3d(coords(i-2, :) - coords(i-3, :), bc)
+      n = cross3d(coords(:, i-2) - coords(:, i-3), bc)
       n = n / sqrt(sum(n**2))
       ! calculate the M matrix
       M(:, 1) = bc
       M(:, 2) =  cross3d(n, bc)
       M(:, 3) = n
       ! get the point coordinates
-      coords(i, :) = matmul(M, coords(i, :)) + coords(i-1, :)
+      coords(:, i) = matmul(M, coords(:, i)) + coords(:, i-1)
     end do
   
   return
@@ -100,9 +100,9 @@ contains
   ! configurations of a transformation.
   subroutine trRestoreCoords(m, coords, conf_coords)
     type(TrModel), intent(in)          :: m
-    real(kind=8),  intent(out), target :: coords(m%atom_num, 3, &
+    real(kind=8),  intent(out), target :: coords(3, m%atom_num, &
       m%conf_num)
-    real(kind=8),  intent(out)         :: conf_coords(m%atom_num, 3, &
+    real(kind=8),  intent(out)         :: conf_coords(3, m%atom_num, &
       m%conf_num)
 
     integer(kind=4)            :: i, j
@@ -110,7 +110,8 @@ contains
     real(kind=8), pointer      :: curr_conf(:,:)
 
     coords(:, :, 1) = m%start_coords
-    first_trans = sum(m%start_coords, 1) / m%atom_num
+    conf_coords(:, :, 1) = 0
+    first_trans = sum(m%start_coords, 2) / m%atom_num
 
     do i = 2, m%conf_num
       curr_conf => coords(:, :, i)
@@ -118,10 +119,10 @@ contains
         m%psi(:, i), m%atom_num)
       conf_coords(:, :, i) = coords(:, :, i)
       ! apply the rotation and the transformation
-      curr_conf = matmul(curr_conf, m%rot_mat(:, :, i))
-      curr_trans = sum(curr_conf, 1) / m%atom_num
+      curr_conf = matmul(m%rot_mat(:, :, i), curr_conf)
+      curr_trans = sum(curr_conf, 2) / m%atom_num
       do j = 1, m%atom_num
-        curr_conf(j, :) = curr_conf(j, :) - curr_trans + &
+        curr_conf(:, j) = curr_conf(:, j) - curr_trans + &
           first_trans
       end do
     end do
@@ -136,8 +137,8 @@ contains
     type(TrModel),   intent(in)  :: m
     integer(kind=4), intent(in)  :: p
     real(kind=8),    intent(out) :: cost_val
-    real(kind=8),    intent(out) :: tr_coords(m%atom_num, 3, m%conf_num)
-    real(kind=8),    intent(out) :: conf_coords(m%atom_num, 3, &
+    real(kind=8),    intent(out) :: tr_coords(3, m%atom_num, m%conf_num)
+    real(kind=8),    intent(out) :: conf_coords(3, m%atom_num, &
       m%conf_num)
 
     integer(kind=4)                     :: i
@@ -148,7 +149,7 @@ contains
     cost_val = 0
     do i = 1, m%conf_num - 1
       temp_dist = sqrt(sum((tr_coords(:, :, i + 1) - &
-        tr_coords(:, :, i)) ** 2, 2))
+        tr_coords(:, :, i)) ** 2, 1))
       cost_val = cost_val + sum(m%atom_masses * (temp_dist ** p))
     end do
 
@@ -173,8 +174,8 @@ contains
 
     type(TrModel) :: temp_m
     integer       :: i
-    real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: coords
-    real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: conf_coords
+    real(kind=8), dimension(3, m%atom_num, m%conf_num) :: coords
+    real(kind=8), dimension(3, m%atom_num, m%conf_num) :: conf_coords
     real(kind=8), dimension(p_num, m%conf_num - 2)     :: temp_p_angles
     real(kind=8), dimension(t_num, m%conf_num - 2)     :: temp_t_angles
 
@@ -219,18 +220,18 @@ contains
     integer(kind=4), intent(in) :: p_num, t_num
     integer(kind=4), dimension(p_num), intent(in) :: p_indices
     integer(kind=4), dimension(t_num), intent(in) :: t_indices
-    real(kind=8), dimension(m%atom_num, 3, m%conf_num), &
+    real(kind=8), dimension(3, m%atom_num, m%conf_num), &
       intent(in) :: coords
-    real(kind=8), dimension(m%atom_num, 3, m%conf_num), &
+    real(kind=8), dimension(3, m%atom_num, m%conf_num), &
       intent(in) :: conf_coords
     real(kind=8), dimension((p_num + t_num) * (m%conf_num - 2)) :: g
 
     integer(kind=4) :: i, j, angle_num
-    real(kind=8), dimension(m%atom_num, 3, m%conf_num) :: vS
-    real(kind=8), dimension(m%atom_num - 1, 3, m%conf_num) :: vR
-    real(kind=8), dimension(m%atom_num - 2, 3, m%conf_num) :: vN, vP
-    real(kind=8), dimension(m%atom_num, 3, m%atom_num - 1) :: vQ
-    real(kind=8), dimension(m%atom_num, 3) :: mean_vQ, v
+    real(kind=8), dimension(3, m%atom_num, m%conf_num) :: vS
+    real(kind=8), dimension(3, m%atom_num - 1, m%conf_num) :: vR
+    real(kind=8), dimension(3, m%atom_num - 2, m%conf_num) :: vN, vP
+    real(kind=8), dimension(3, m%atom_num, m%atom_num - 1) :: vQ
+    real(kind=8), dimension(3, m%atom_num) :: mean_vQ, v
     real(kind=8), dimension(p_num, m%conf_num - 2) :: grad_p
     real(kind=8), dimension(t_num, m%conf_num - 2) :: grad_t
 
@@ -244,35 +245,35 @@ contains
 
       if (p_num > 0) then
         do i = 1, m%atom_num - 2
-          vQ(i + 2, :, i) = conf_coords(i + 2, :, j) - &
-            conf_coords(i + 1, :, j)
+          vQ(:, i + 2, i) = conf_coords(:, i + 2, j) - &
+            conf_coords(:, i + 1, j)
         end do
       end if
 
       do angle_num = 1, p_num
         i = p_indices(angle_num)
-        mean_vQ = spread(sum(vQ(:, :, i) , 1) / m%atom_num, &
-          1, m%atom_num)
-        v = cross(spread(vP(i, :, j), 1, m%atom_num), vQ(:, :, i) - &
+        mean_vQ = spread(sum(vQ(:, :, i) , 2) / m%atom_num, &
+          2, m%atom_num)
+        v = cross(spread(vP(:, i, j), 2, m%atom_num), vQ(:, :, i) - &
           mean_vQ, m%atom_num)
         grad_p(angle_num, j - 1) = 2 * sum(m%atom_masses * &
-          dot(vS(:, :, j), matmul(v, m%rot_mat(:, :, j)), m%atom_num))
+          dot(vS(:, :, j), matmul(m%rot_mat(:, :, j), v), m%atom_num))
       end do
 
       if (p_num > 0) then
         do i = 1, m%atom_num - 2
-          vQ(i + 2, :, i) = 0
+          vQ(:, i + 2, i) = 0
         end do
       end if
 
       do angle_num = 1, t_num
         i = t_indices(angle_num)
-        mean_vQ = spread(sum(vQ(:, :, i) , 1) / m%atom_num, &
-          1, m%atom_num)
-        v = cross(spread(vN(i, :, j), 1, m%atom_num), vQ(:, :, i) - &
+        mean_vQ = spread(sum(vQ(:, :, i) , 2) / m%atom_num, &
+          2, m%atom_num)
+        v = cross(spread(vN(:, i, j), 2, m%atom_num), vQ(:, :, i) - &
           mean_vQ, m%atom_num)
         grad_t(angle_num, j - 1) = 2 * sum(m%atom_masses * &
-          dot(vS(:, :, j), matmul(v, m%rot_mat(:, :, j)), m%atom_num))
+          dot(vS(:, :, j), matmul(m%rot_mat(:, :, j), v), m%atom_num))
       end do
     end do
 
@@ -287,38 +288,38 @@ contains
 
   pure function r(x, atom_num, conf_num)
     integer(kind=4), intent(in) :: atom_num, conf_num
-    real(kind=8), dimension(atom_num, 3, conf_num), intent(in) :: x
-    real(kind=8), dimension(atom_num - 1, 3, conf_num) :: r
+    real(kind=8), dimension(3, atom_num, conf_num), intent(in) :: x
+    real(kind=8), dimension(3, atom_num - 1, conf_num) :: r
 
-    r = x(2:atom_num, :, :) - x(1:(atom_num - 1), :, :)
+    r = x(:, 2:atom_num, :) - x(:, 1:(atom_num - 1), :)
 
   end function r
 
   pure function n(r, atom_num, conf_num)
     integer(kind=4), intent(in) :: atom_num, conf_num
-    real(kind=8), dimension(atom_num - 1, 3, conf_num), &
+    real(kind=8), dimension(3, atom_num - 1, conf_num), &
       intent(in) :: r
-    real(kind=8), dimension(atom_num - 2, 3, conf_num) :: n
+    real(kind=8), dimension(3, atom_num - 2, conf_num) :: n
 
-    real(kind=8), dimension(atom_num - 1, 3, conf_num) :: temp_n
+    real(kind=8), dimension(3, atom_num - 1, conf_num) :: temp_n
 
-    temp_n = r / spread(sqrt(sum(r**2, 2)), 2, 3)
-    n = temp_n(2:, :, :) 
+    temp_n = r / spread(sqrt(sum(r**2, 1)), 1, 3)
+    n = temp_n(:, 2:, :)
 
   end function n
 
   pure function p(r, atom_num, conf_num)
     integer(kind=4), intent(in) :: atom_num, conf_num
-    real(kind=8), dimension(atom_num - 1, 3, conf_num), &
+    real(kind=8), dimension(3, atom_num - 1, conf_num), &
       intent(in) :: r
-    real(kind=8), dimension(atom_num - 2, 3, conf_num) :: p
+    real(kind=8), dimension(3, atom_num - 2, conf_num) :: p
 
     integer(kind=4) :: i, j
 
     do i = 1, atom_num - 2
-      do j = 1, conf_num
-        p(i, :, j) = cross3d(r(i, :, j), r(i + 1, :, j)) 
-        p(i, :, j) = p(i, :, j) / sqrt(sum(p(i, :, j) ** 2))
+      do j = 2, conf_num - 1
+        p(:, i, j) = cross3d(r(:, i, j), r(:, i + 1, j))
+        p(:, i, j) = p(:, i, j) / sqrt(sum(p(:, i, j) ** 2))
       end do
     end do
 
@@ -326,8 +327,8 @@ contains
 
   pure function s(x, atom_num, conf_num)
     integer(kind=4), intent(in) :: atom_num, conf_num
-    real(kind=8), dimension(atom_num, 3, conf_num), intent(in) :: x
-    real(kind=8), dimension(atom_num, 3, conf_num) :: s
+    real(kind=8), dimension(3, atom_num, conf_num), intent(in) :: x
+    real(kind=8), dimension(3, atom_num, conf_num) :: s
 
     s(:, :, 2:(conf_num - 1)) = 2*x(:, :, 2:(conf_num - 1)) - &
       x(:, :, :(conf_num - 2)) - x(:, :, 3:)
@@ -336,15 +337,15 @@ contains
 
   pure function q(conf_x, atom_num, shift)
     integer(kind=4), intent(in) :: atom_num, shift
-    real(kind=8), dimension(atom_num, 3), intent(in)   :: conf_x
-    real(kind=8), dimension(atom_num, 3, atom_num - 1) :: q
+    real(kind=8), dimension(3, atom_num), intent(in)   :: conf_x
+    real(kind=8), dimension(3, atom_num, atom_num - 1) :: q
     
     integer(kind=4) :: l, i
     
     q = 0
     do i = 1, atom_num - 1
       do l = i + shift,  atom_num 
-        q(l, :, i) = conf_x(l, :) - conf_x(i + 1, :)
+        q(:, l, i) = conf_x(:, l) - conf_x(:, i + 1)
       end do
     end do
 
