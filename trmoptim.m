@@ -15,7 +15,7 @@ function [x, fval, gnorm, exitFlag] = trmoptim(trmodel, pIndices, ...
 %   less than gradTol; otherwise, the number of optimization steps exceeded
 %   maxSteps.
 %
-%   See also trmobjfunc
+%   See also trmiteroptim trmobjfunc
 %
 % PROMPT Toolbox for MATLAB
 
