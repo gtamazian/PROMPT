@@ -2,7 +2,7 @@ FC = gfortran
 
 FCFLAGS = -O3
 
-GFORT_DFLAGS = -g -O0 -Wall -Wextra -Warray-temporaries -Wconversion \
+GFORT_DFLAGS = -g -O0 -Wall -Wextra -Wconversion \
 	-fimplicit-none -fbacktrace -ffree-line-length-0 -fcheck=all \
 	-fbackslash -ffpe-trap=zero,overflow,underflow -finit-real=nan
 
