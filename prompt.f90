@@ -74,11 +74,10 @@ contains
     coords(:, 3) = coords(:, 2) + [r(2) * cos(alpha(1)), r(2) * &
       sin(alpha(1)), 0.0d0]
 
-    coords(1, 4:) = r(3:) * cos(alpha(2:))
-    coords(2, 4:) = r(3:) * sin(alpha(2:)) * cos(psi)
-    coords(3, 4:) = r(3:) * sin(alpha(2:)) * sin(psi)
-
     do i = 4, atom_num
+      coords(:, i) = r(i-1) * [cos(alpha(i-2)), &
+        sin(alpha(i-2)) * cos(psi(i-3)), &
+        sin(alpha(i-2)) * sin(psi(i-3))]
       ! calculate the bc vector
       bc = coords(:, i-1) - coords(:, i-2)
       bc = bc / sqrt(sum(bc**2))
