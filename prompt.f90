@@ -118,7 +118,7 @@ contains
         m%psi(:, i), m%atom_num)
       conf_coords(:, :, i) = coords(:, :, i)
       ! apply the rotation and the transformation
-      curr_conf = matmul(m%rot_mat(:, :, i), curr_conf)
+      curr_conf = matmul(transpose(m%rot_mat(:, :, i)), curr_conf)
       curr_trans = sum(curr_conf, 2) / m%atom_num
       do j = 1, m%atom_num
         curr_conf(:, j) = curr_conf(:, j) - curr_trans + &
@@ -256,7 +256,7 @@ contains
         v = cross(spread(vP(:, i, j), 2, m%atom_num), vQ(:, :, i) - &
           mean_vQ, m%atom_num)
         grad_p(angle_num, j - 1) = 2 * sum(m%atom_masses * &
-          dot(vS(:, :, j), matmul(m%rot_mat(:, :, j), v), m%atom_num))
+          dot(vS(:, :, j), matmul(transpose(m%rot_mat(:, :, j)), v), m%atom_num))
       end do
 
       if (p_num > 0) then
@@ -272,7 +272,7 @@ contains
         v = cross(spread(vN(:, i, j), 2, m%atom_num), vQ(:, :, i) - &
           mean_vQ, m%atom_num)
         grad_t(angle_num, j - 1) = 2 * sum(m%atom_masses * &
-          dot(vS(:, :, j), matmul(m%rot_mat(:, :, j), v), m%atom_num))
+          dot(vS(:, :, j), matmul(transpose(m%rot_mat(:, :, j)), v), m%atom_num))
       end do
     end do
 
