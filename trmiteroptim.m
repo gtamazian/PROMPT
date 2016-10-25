@@ -1,13 +1,15 @@
-function models = trmiteroptim(trmodel, nPlanar, nTorsion, gradTol, ...
-    nIterations)
+function [models, optimResults] = trmiteroptim(trmodel, nPlanar, ...
+    nTorsion, schemeOptions)
 %TRMITEROPTIM Iterative optimization scheme.
-%   TRMITEROPTIM(trmodel, nPlanar, nTorsion, schemeOptions, nIterations)
+%   TRMITEROPTIM(trmodel, nPlanar, nTorsion, schemeOptions)
 %   implements an iterative optimization scheme; nPlanar and nTorsion
 %   specify the numbers of planar and torsion angles to be optimized;
-%   gradTol is the gradient threshold value; nIterations is the maximum 
-%   number of the optimization process iterations launched at every local
-%   step. The function returns a cell array of optimization models; each
-%   model in the array corresponds to a stage result.
+%   schemeOptions is the structure of the optimization process parameters
+%   (by default, it is the same as optimoptions('fminunc') with the
+%   infinite numbers of iterations and function evaluations);
+%   nIterations is the maximum number of optimization stages (the default
+%   values is Inf). The optimization scheme stops if the rotation matrix
+%   update procedure increases the transformation cost.
 %
 %   See also trmoptim trmobjfunc
 %
@@ -16,38 +18,50 @@ function models = trmiteroptim(trmodel, nPlanar, nTorsion, gradTol, ...
 % By Gaik Tamazian, 2016.
 % mail (at) gtamazian (dot) com
 
+if nargin < 4
+    schemeOptions = optimoptions('fminunc', ...
+        'Algorith', 'quasi-newton', ...
+        'Display', 'iter', ...
+        'OptimalityTolerance', 1e-1, ...
+        'SpecifyObjectiveGradient', true, ...
+        'MaxIterations', Inf, ...
+        'MaxFunctionEvaluations', Inf);
+end
+
 models = cell(1, 1000);
+optimResults = cell(1, 1000);
 
 % first, determine indices of planar and torsion angles to be optimized
 P = trmdistantangleindices(trmodel, nPlanar, 'planar');
 T = trmdistantangleindices(trmodel, nTorsion, 'torsion');
 
-iStep = 0;
-iStage = 0;
+iStep = 1;
+exitFlag = 0;
 
-fprintf('# Stage\t# Step\t# Local step\tFunc value\tGrad norm\n');
+while ~exitFlag
+    % get the objective function for the current stage
+    f = @(x) trmobjfunc(trmodel, P, T, x);
 
-while 1
-    iStage = iStage + 1;
-    jStep = 0;
-    exitFlag = 0;
-    while ~exitFlag
-        iStep = iStep + 1;
-        jStep = jStep + 1;
-        [x,fval,gnorm,exitFlag] = trmoptim(trmodel, P, T, gradTol, ...
-            nIterations);
-        trmodel = trmchangeangles(trmodel, P, T, x);
-        fprintf('%7d\t%6d\t%12d\t%10e\t%10e\n', iStage, iStep, jStep, ...
-            fval, gnorm);
-    end
+    % get the initial point
+    initial_point = trminitialpoint(trmodel, P, T);
+
+    problem.options = schemeOptions;
+    problem.solver = 'fminunc';
+    problem.x0 = initial_point;
+    problem.objective = f;
     
+    [x,~,~,output] = fminunc(problem);
+
+    trmodel = trmchangeangles(trmodel, P, T, x);
     models{iStep} = trmodel;
-    
+    optimResults{iStep} = output;
+
     prevModelCost = trmcost(trmodel);
     trmodel = trmupdaterotations(trmodel);
-
-    if trmcost(trmodel) > prevModelCost
-        break;
+    if (trmcost(trmodel) > prevModelCost) || (output.iterations == 1)
+        exitFlag = 1;
+    else
+        iStep = iStep + 1;
     end
 end
 
