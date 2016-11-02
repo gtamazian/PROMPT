@@ -58,6 +58,14 @@ else
         'Non-backbone atoms in the provided PDB structures.');
 end
 
+% Check for alternative loci IDs; if there are any, then show the warning
+% message
+if (length(pdbgetaltlocids(PDBStruct1)) > 2) || ...
+        (length(pdbgetaltlocids(PDBStruct2)) > 2)
+   warning('PROMPT:trmcreate:alternativeLociIDs', ...
+       'Alternative loci IDs in the provided PDB structures.');
+end
+
 % Get atomic masses of the atoms.
 trmodel = struct('m', atomicmass({PDBStruct1.Model.Atom.element}), ...
     'StartCoords', atomiccoords(PDBStruct1), ...
