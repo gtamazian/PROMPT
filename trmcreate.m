@@ -75,14 +75,15 @@ alphaCarbonAtoms = PDBStruct1.Model.Atom( ...
     ismember({PDBStruct1.Model.Atom.AtomName}, {'CA'}));
 
 if onlyCA
-    trmodel.m = trmodel.m + sidechainmass({alphaCarbonAtoms.resName}) + ...
-        2*atomicmass({'H'}) + sum(atomicmass({'N', 'C', 'O'}));
+    trmodel.m = trmodel.m + sidechainmass({alphaCarbonAtoms.resName});
 else
     % Process side chains atoms - get a vector of their masses and add
     % them to atomic masses of alpha carbons. Also add a mass of one 
     % hydrogen atom.
     trmodel.m(2:3:end) = trmodel.m(2:3:end) + ...
-        sidechainmass({alphaCarbonAtoms.resName}) + atomicmass({'H'});
+        sidechainmass({alphaCarbonAtoms.resName}) - ...
+        (atomicmass({'H'}) + atomicmass({'N'}) + 2*atomicmass({'C'}) + ...
+        atomicmass({'O'}));
 
     % Add masses of hydrogen atoms to nitrogen atoms of the backbone.
     trmodel.m(1:3:end) = trmodel.m(1:3:end) + atomicmass({'H'});
