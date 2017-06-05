@@ -17,8 +17,10 @@ struct1 = PDBStruct; struct1.Model = struct1.Model(1);
 struct2 = PDBStruct; struct2.Model = struct2.Model(end);
 trmodel = trmcreate(struct1,struct2,nModels-2);
 
-[~,~,psi] = createmodel(PDBStruct);
+[~,alpha,psi] = createmodel(PDBStruct);
+trmodel.alpha(:,2:end-1) = reduceangles(alpha(:,2:end-1));
 trmodel.psi(:,2:end-1) = reduceangles(psi(:,2:end-1));
+trmodel = trmupdaterotations(trmodel);
 
 end
 
