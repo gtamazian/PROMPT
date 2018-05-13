@@ -1,5 +1,5 @@
 function [models, optimResults] = trmiteroptim(trmodel, nPlanar, ...
-    nTorsion, schemeOptions)
+    nTorsion, schemeOptions, maxIter)
 %TRMITEROPTIM Iterative optimization scheme.
 %   TRMITEROPTIM(trmodel, nPlanar, nTorsion, schemeOptions)
 %   implements an iterative optimization scheme; nPlanar and nTorsion
@@ -26,6 +26,10 @@ if nargin < 4
         'SpecifyObjectiveGradient', true, ...
         'MaxIterations', Inf, ...
         'MaxFunctionEvaluations', Inf);
+end
+
+if nargin < 5
+    maxIter = Inf;
 end
 
 models = cell(1, 1000);
@@ -58,7 +62,8 @@ while ~exitFlag
 
     prevModelCost = trmcost(trmodel);
     trmodel = trmupdaterotations(trmodel);
-    if (trmcost(trmodel) > prevModelCost) || (output.iterations == 1)
+    if (trmcost(trmodel) > prevModelCost) || (output.iterations == 1) ...
+            || (iStep >= maxIter)
         exitFlag = 1;
     else
         iStep = iStep + 1;
