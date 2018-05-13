@@ -102,6 +102,9 @@ trmodel.m(1) = trmodel.m(1) + 2*atomicmass({'H'});
 % Add a mass of a hydroxil group to C-end of the protein.
 trmodel.m(end) = trmodel.m(end) + sum(atomicmass({'O', 'H'}));
 
+% Normalize the masses for better precision of following calculations
+trmodel.m = trmodel.m / sum(trmodel.m);
+
 trmodel.r     = zeros(length(trmodel.m) - 1, nConf+2);
 trmodel.alpha = zeros(length(trmodel.m) - 2, nConf+2);
 trmodel.psi   = zeros(length(trmodel.m) - 3, nConf+2);
