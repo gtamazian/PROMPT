@@ -73,8 +73,7 @@ nAtoms = length(PDBStruct1.Model(1).Atom);
 
 % Get atomic masses of the atoms.
 trmodel = struct('m', zeros(nAtoms, 1), ...
-    'StartCoords', atomiccoords(PDBStruct1), ...
-    'FinishCoords', atomiccoords(PDBStruct2));
+    'StartCoords', atomiccoords(PDBStruct1));
 
 if onlyCA
     trmodel.m = atomicmass({'C'}) + ...
