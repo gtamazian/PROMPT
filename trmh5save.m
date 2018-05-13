@@ -19,8 +19,8 @@ end
 h5create(filename, '/w', size(trmodel.m));
 h5write(filename, '/w', trmodel.m);
 
-h5create(filename, '/start_coords', size(trmodel.StartCoords));
-h5write(filename, '/start_coords', trmodel.StartCoords);
+h5create(filename, '/start_coords', fliplr(size(trmodel.StartCoords)));
+h5write(filename, '/start_coords', transpose(trmodel.StartCoords));
 
 h5create(filename, '/r', size(trmodel.r));
 h5write(filename, '/r', trmodel.r);
