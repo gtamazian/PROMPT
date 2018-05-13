@@ -31,8 +31,14 @@ h5write(filename, '/alpha', trmodel.alpha);
 h5create(filename, '/gamma', size(trmodel.psi));
 h5write(filename, '/gamma', trmodel.psi);
 
-h5create(filename, '/rot_mat', size(trmodel.U));
-h5write(filename, '/rot_mat', trmodel.U);
+% write the rotation matrices transposed
+tempU = trmodel.U;
+for k = 1:size(tempU, 3)
+    tempU(:,:,k) = transpose(tempU(:,:,k));
+end
+
+h5create(filename, '/rot_mat', size(tempU));
+h5write(filename, '/rot_mat', tempU);
 
 end
 
